@@ -1,5 +1,4 @@
 .idea
 venv
 .env
-question.csv
-answer.csv
+.csv

@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %} Questions | AskMate {% endblock %}
+{% block content %}
+    {{ super() }}
+    <div>
+        {% for row in questions %}
+            <p  id="questions"><a href="/question/{{ row['id'] }}">{{ row['title'] }}</a>
+                <br>
+                <br>
+                <small>Asked: {{ date[loop.index - 1] }}</small>
+            </p>
+        {% endfor %}
+    </div>
 
-</body>
-</html>
+{% endblock %}

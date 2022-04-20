@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect
 import data_manager
 
@@ -20,15 +19,6 @@ def route_list():
         order = request.form['order']
 
     return render_template('list.html', questions=questions, date=date)
-
-
-
-    # if wybrany z options rodzaj sortowania
-    # return list html z wybranym rodzajem sortowania w jako klucz słownika
-    # np. sorted(questions, key=lambda item: item['view_number'], reverse=True)
-    return render_template('list.html',
-                           questions=sorted(questions, key=lambda item: item['submission_time']),
-                           date=date)
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])

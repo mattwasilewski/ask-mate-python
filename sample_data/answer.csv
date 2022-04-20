@@ -1,9 +1,1 @@
 id,submission_time,vote_number,question_id,message,image
-1,1493068124,0,1,You need to use brackets: my_list = [],img.url
-2,1493068124,0,1,You need to use brackets: my_list = [],img.url
-3,1493068124,0,1,test1,img.url
-4,1493068124,0,1,test2,img.url
-5,1493068124,0,1,test3,img.url
-1,1493015432,0,2,test1,img.url
-2,1493015432,0,2,test2,img.url
-3,1493015432,0,2,test3,img.url

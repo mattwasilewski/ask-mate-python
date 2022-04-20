@@ -41,6 +41,11 @@ def save_file(new_answer):
     writer.writerow(new_answer)
 
 
+def get_current_time():
+    current_time = int(datetime.now().timestamp())
+    return current_time
+
+
 # do wywalenia
 def get_timestamp():
     questions = convert_data('sample_data/question.csv')

@@ -22,8 +22,12 @@ def new_answer(question_id):
     answer = {}
     answers = data_manager.get_all_answers()
     current_time = data_manager.get_timestamp()
+    answer_count = 1
+    for answer in answers:
+        if answer['question_id'] == question_id:
+            answer_count += 1
     if request.method == 'POST':
-        answer['id'] = len(answers) + 1
+        answer['id'] = answer_count
         answer['submission_time'] = current_time[int(question_id)]
         answer['vote_number'] = '0'
         answer['question_id'] = question_id

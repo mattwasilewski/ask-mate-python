@@ -7,13 +7,13 @@ ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'messag
 
 
 def get_all_data():
-    answer_data = connection.get_data('sample_data/answer.csv')
-    question_data = connection.get_data('sample_data/question.csv')
+    answer_data = connection.get_data('C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\sample_data\\answer.csv')
+    question_data = connection.get_data('C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\sample_data\\question.csv')
     return answer_data, question_data
 
 
 def get_all_answers():
-    file = 'sample_data/answer.csv'
+    file = 'C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\sample_data\\answer.csv'
     with open(file) as csvfile:
         my_data = []
         reader = csv.DictReader(csvfile)
@@ -24,7 +24,7 @@ def get_all_answers():
 
 
 def save_file(new_answer):
-    data_file = open('sample_data/answer.csv', 'a', newline='')
+    data_file = open('C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\sample_data\\answer.csv', 'a', newline='')
     fieldnames = connection.ANSWER_HEADERS
     writer = csv.DictWriter(data_file, fieldnames=fieldnames)
     writer.writerow(new_answer)

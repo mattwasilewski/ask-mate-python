@@ -2,6 +2,20 @@
 {% block title %} Questions | AskMate {% endblock %}
 {% block content %}
     {{ super() }}
+    <form action="/list?order_by={{ value }}" method="post">
+        <label for="order">Sorted by:</label>
+        <select onchange="this.form.submit()" name="order" id="order">
+    {#    {% for row in questions %}#}
+    {#        {% for key in row.keys() %}#}
+            <option value="submission-time">Submission time</option>
+            <option value="title">Title</option>
+            <option value="message">Message</option>
+            <option value="number-of-views">Number of views</option>
+            <option value="number-of-votes">Number of votes</option>
+    {#    {% endfor %}#}
+    {#    {% endfor %}#}
+        </select>
+    </form>
     <div>
         {% for row in questions %}
             <p  id="questions"><a href="/question/{{ row['id'] }}">{{ row['title'] }}</a>
@@ -11,5 +25,4 @@
             </p>
         {% endfor %}
     </div>
-
 {% endblock %}

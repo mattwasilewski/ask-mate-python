@@ -29,10 +29,9 @@ def route_list():
 def new_answer(question_id):
     answer = {}
     answers = data_manager.convert_data('sample_data/answer.csv')
-    current_time = data_manager.get_timestamp()
     if request.method == 'POST':
         answer['id'] = len(answers) + 1
-        answer['submission_time'] = current_time[int(question_id)]
+        answer['submission_time'] = data_manager.get_current_time()
         answer['vote_number'] = '0'
         answer['question_id'] = question_id
         answer['message'] = request.form['message']

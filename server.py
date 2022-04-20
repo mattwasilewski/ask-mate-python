@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import data_manager
+import util
 
 app = Flask(__name__)
 
@@ -11,20 +12,23 @@ def hello():
 
 @app.route("/list", methods=['GET', 'POST'])
 def route_list():
-    date = data_manager.timestamp_to_datetime()
-    answers, questions = data_manager.get_all_data()
-    questions = sorted(questions, key=lambda item: item['submission_time'])
-    if request.method == "POST":
-        sort_option = request.form['sort']
+    questions = data_manager.convert_data('sample_data/question.csv')
+    if request.method == 'POST':
+        sort_method = request.form['sort']
         order = request.form['order']
-
-    return render_template('list.html', questions=questions, date=date)
+        questions = util.get_sorted_items(questions, sort_method, order)
+    else:
+        query_parameters = request.args
+        sort_method = query_parameters.get('order_by')
+        order = query_parameters.get('order_direction')
+        questions = util.get_sorted_items(questions, sort_method, order)
+    return render_template('list.html', questions=questions)
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
 def new_answer(question_id):
     answer = {}
-    answers = data_manager.get_all_answers()
+    answers = data_manager.convert_data('sample_data/answer.csv')
     current_time = data_manager.get_timestamp()
     if request.method == 'POST':
         answer['id'] = len(answers) + 1

@@ -14,6 +14,8 @@ def get_data(data_file):
     dictionaries = csv.DictReader(csvfile)
     return dictionaries
 
+
+
 # DODAWAC NOWE PYTANIE NA POCZĄTEK LISTY
 
 # def save_new_question(new_question=None):

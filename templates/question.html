@@ -4,7 +4,21 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+p {text-align: center;}
+</style>
 <body>
+<p>
+<form action="{{ "/question/1"}}" method="post">
+<label for="message"><strong>Enter your answer:</strong></label>
+        <br>
+        <label for="message">User Story:</label>
+        <br>
+    <textarea id="message" name="message" rows="6" cols="60">Enter your message</textarea>
+        <br>
+            <input type="submit" value="Submit">
+        </form>
+</p>
 
 </body>
 </html>

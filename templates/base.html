@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
-{% block content %} {% endblock %}
+{% block content %} <h1>AskMate</h1> {% endblock %}
 {% block footer %} {% endblock %}
 </body>
 </html>

@@ -52,7 +52,7 @@ def new_answer(question_id):
 
 @app.route("/question/<question_id>/edit", methods=['POST', 'GET'])
 def edit_question(question_id):
-    questions = data_manager.convert_data(data_manager.QUESTION_DATA_FILE_PATH)
+    questions = data_manager.get_data(data_manager.QUESTION_DATA_FILE_PATH)
     if request.method == 'POST':
         updated_data = []
         for row in questions:

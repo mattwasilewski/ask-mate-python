@@ -23,31 +23,23 @@ def convert_data(datafile):
     return converted_data
 
 
-def get_all_answers():
-    file = 'sample_data/answer.csv'
-    with open(file) as csvfile:
-        my_data = []
-        reader = csv.DictReader(csvfile)
-        for story in reader:
-            new = dict(story)
-            my_data.append(new)
-        return my_data
-
-
-def save_file(new_answer):
-    data_file = open('sample_data/answer.csv', 'a', newline='')
+def save_new_answer(new_answer):
+    data_file = open(ANSWER_DATA_FILE_PATH, 'a', newline='')
     fieldnames = ANSWER_HEADERS
     writer = csv.DictWriter(data_file, fieldnames=fieldnames)
     writer.writerow(new_answer)
+
+
+def save_updated_data(updated_data):
+    csvfile = open(QUESTION_DATA_FILE_PATH, 'w', newline='')
+    fieldnames = QUESTION_HEADERS
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for story in updated_data:
+        writer.writerow(story)
 
 
 def get_current_time():
     current_time = int(datetime.now().timestamp())
     return current_time
 
-
-# do wywalenia
-def get_timestamp():
-    questions = convert_data('sample_data/question.csv')
-    timestamps = [row['submission_time'] for row in questions]
-    return timestamps

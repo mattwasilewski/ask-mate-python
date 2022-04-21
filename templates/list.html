@@ -2,9 +2,9 @@
 {% block title %} Questions | AskMate {% endblock %}
 {% block content %}
     {{ super() }}
-    <form action="{{ url_for('route_list') }}" method="post">
+    <form method="get">
         <label for="sort">Sorted by:</label>
-        <select name="sort" id="sort">
+        <select name="sort_by" id="sort">
             <option value="time">Submission time</option>
             <option value="title">Title</option>
             <option value="message">Message</option>
@@ -12,7 +12,7 @@
             <option value="votes">Number of votes</option>
         </select>
         <label for="order">Order:</label>
-        <select name="order" id="order">
+        <select name="order_direction" id="order">
             <option value="desc">Descending</option>
             <option value="asc">Ascending</option>
         </select>

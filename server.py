@@ -25,6 +25,15 @@ def route_list():
     return render_template('list.html', questions=questions)
 
 
+@app.route("/question/<question_id>")
+def display_question(question_id):
+    new_answer = None
+    questions = data_manager.convert_data('sample_data/question.csv')
+    answers = data_manager.convert_data('sample_data/answer.csv')
+    return render_template('question.html', answers=answers, questions=questions,
+                           question_id=question_id, new_answer=new_answer)
+
+
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
 def new_answer(question_id):
     answer = {}
@@ -37,7 +46,7 @@ def new_answer(question_id):
         answer['message'] = request.form['message']
         answer['image'] = 'img.url'
         data_manager.save_file(answer)
-        return redirect('/list')
+        return redirect('/question')
     return render_template('question.html', question_id=question_id)
 
 

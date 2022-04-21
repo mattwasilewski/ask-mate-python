@@ -13,7 +13,9 @@
             <textarea name="message" id="message" cols="100" rows="15">{{ row['message'] }}</textarea>
         {% endif %}
     {% endfor %}
+        <br>
         <button type="submit">Edit</button>
     </form>
+    <button><a href="{{ url_for('display_question', question_id=question_id) }}">Go back</a></button>
 
 {% endblock %}

@@ -1,7 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-<body>
-<p>
+    <div id="question-page">
+    {% if new_answer==None %}
+        {% for row in questions %}
+            {% if row['id'] == question_id %}
+                <h2>{{ row['title'] }}</h2>
+                    <p>{{ row['message'] }}</p>
+            {% endif %}
+        {% endfor %}
+        {% for row in answers %}
+            {% if row['question_id'] == question_id %}
+                <p>{{ row['message'] }}</p>
+            {% endif %}
+        {% endfor %}
+        <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
+    {% else %}
+    </div>
+    <div id="new-answer-page">
 <form action="{{ "/question/"+ question_id + "/new-answer"}}" method="post">
 <label for="message"><strong>Enter your answer:</strong></label>
         <br>
@@ -10,8 +25,6 @@
         <br>
             <input type="submit" value="Submit">
         </form>
-</p>
-
-</body>
-
+    </div>
+    {% endif %}
 {% endblock %}

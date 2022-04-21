@@ -13,15 +13,10 @@ def hello():
 @app.route("/list", methods=['GET', 'POST'])
 def route_list():
     questions = data_manager.convert_data(data_manager.QUESTION_DATA_FILE_PATH)
-    if request.method == 'POST':
-        sort_method = request.form['sort_by']
-        order = request.form['order_direction']
-        questions = util.get_sorted_items(questions, sort_method, order)
-    else:
-        query_parameters = request.args
-        sort_method = query_parameters.get('order_by')
-        order = query_parameters.get('order_direction')
-        questions = util.get_sorted_items(questions, sort_method, order)
+    query_parameters = request.args
+    sort_method = query_parameters.get('order_by')
+    order = query_parameters.get('order_direction')
+    questions = util.get_sorted_items(questions, sort_method, order)
     return render_template('list.html', questions=questions)
 
 

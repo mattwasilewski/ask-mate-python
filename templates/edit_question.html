@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="{{ url_for('edit_question', question_id=question_id) }}">
+    {% for row in questions %}
+        {% if row['id'] == question_id %}
+            <label for="title">Edit title:</label>
+            <br>
+            <input type="text" name="edit_title" id="title" value="{{ row['title'] }}" size="115" >
+            <br>
+            <br>
+            <label for="message">Edit message:</label>
+            <br>
+            <textarea name="edit_message" id="message" cols="100" rows="15">{{ row['message'] }}</textarea>
+        {% endif %}
+    {% endfor %}
+    </form>
+
+{% endblock %}

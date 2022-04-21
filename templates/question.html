@@ -7,15 +7,23 @@
                 <h2>{{ row['title'] }}
                 <button><a href="{{ url_for('edit_question', question_id=question_id )}}">Edit</a></button>
                 </h2>
-                    <p>{{ row['message'] }}</p>
+                    <p>{{ row['message'] }}
+                        <br>
+                        <small>Posted on: {{ row['submission_time'] }}</small>
+                    </p>
             {% endif %}
         {% endfor %}
+        <h3>Answers:</h3>
         {% for row in answers %}
             {% if row['question_id'] == question_id %}
-                <p>{{ row['message'] }}</p>
+                <p>{{ row['message'] }}
+                    <br>
+                    <small>Posted on: {{ row['submission_time'] }}</small>
+                </p>
             {% endif %}
         {% endfor %}
         <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
+        <button><a href="{{ url_for('route_list') }}">Go back</a></button>
     </div>
     {% else %}
     <div id="new-answer-page">

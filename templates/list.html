@@ -19,7 +19,7 @@
         <button type="submit">Sort</button>
     </form>
     <div>
-        {% for row in questions %}
+        {% for row in sorted_questions %}
             <p id="questions"><a href="/question/{{ row['id'] }}">{{ row['title'] }}</a>
                 <br>
                 <br>

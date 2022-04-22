@@ -1,16 +1,16 @@
 from data_manager import convert_questions
 
 
-def get_sorted_items(sort_method, order):
+def get_sorted_questions(sort_method, order):
     if order is None:
         order = 'desc'
     if sort_method is None:
         sort_method = 'time'
     order = True if order == 'desc' else False
-    return sort_items_by(sort_method, order)
+    return sort_questions_by(sort_method, order)
 
 
-def sort_items_by(sort_method, order):
+def sort_questions_by(sort_method, order):
     questions = convert_questions()
     match sort_method:
         case 'title':

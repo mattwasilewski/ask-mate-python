@@ -16,7 +16,7 @@ def route_list():
     query_parameters = request.args
     sort_method = query_parameters.get('order_by')
     order = query_parameters.get('order_direction')
-    sorted_questions = util.get_sorted_items(sort_method, order)
+    sorted_questions = util.get_sorted_questions(sort_method, order)
     return render_template('list.html', sorted_questions=sorted_questions)
 
 

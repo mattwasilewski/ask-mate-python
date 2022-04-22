@@ -1,6 +1,6 @@
 from flask import request
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 import csv
 
 QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'question.csv'
@@ -41,7 +41,7 @@ def save_updated_data(updated_data):
 
 
 def get_current_time():
-    current_time = int(datetime.now().timestamp())
+    current_time = int(datetime.now().replace(tzinfo=timezone.utc).timestamp())
     return current_time
 
 

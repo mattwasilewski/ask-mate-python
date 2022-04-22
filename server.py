@@ -31,16 +31,8 @@ def display_question(question_id):
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
 def new_answer(question_id):
-    answer = {}
-    answers = data_manager.convert_data(data_manager.ANSWER_DATA_FILE_PATH)
     if request.method == 'POST':
-        answer['id'] = len(answers) + 1
-        answer['submission_time'] = data_manager.get_current_time()
-        answer['vote_number'] = '0'
-        answer['question_id'] = question_id
-        answer['message'] = request.form['message']
-        answer['image'] = 'img.url'
-        data_manager.save_new_answer(answer)
+        data_manager.add_answer(question_id)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('question.html', question_id=question_id)
 
@@ -49,15 +41,7 @@ def new_answer(question_id):
 def edit_question(question_id):
     questions = data_manager.get_data(data_manager.QUESTION_DATA_FILE_PATH)
     if request.method == 'POST':
-        updated_data = []
-        for row in questions:
-            for key, value in row.items():
-                if key == 'id' and value == question_id:
-                    row['title'] = request.form['title']
-                    row['message'] = request.form['message']
-                    row['submission_time'] = data_manager.get_current_time()
-            updated_data.append(row)
-            data_manager.save_updated_data(updated_data)
+        data_manager.update_data(question_id, questions)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('edit_question.html', questions=questions, question_id=question_id)
 

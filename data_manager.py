@@ -1,3 +1,4 @@
+from flask import request
 import os
 from datetime import datetime
 import csv
@@ -43,3 +44,26 @@ def get_current_time():
     current_time = int(datetime.now().timestamp())
     return current_time
 
+
+def add_answer(question_id):
+    answers = convert_data(ANSWER_DATA_FILE_PATH)
+    answer = {}
+    answer['id'] = len(answers) + 1
+    answer['submission_time'] = get_current_time()
+    answer['vote_number'] = '0'
+    answer['question_id'] = question_id
+    answer['message'] = request.form['message']
+    answer['image'] = 'img.url'
+    save_new_answer(answer)
+
+
+def update_data(question_id, questions):
+    updated_data = []
+    for row in questions:
+        for key, value in row.items():
+            if key == 'id' and value == question_id:
+                row['title'] = request.form['title']
+                row['message'] = request.form['message']
+                row['submission_time'] = get_current_time()
+        updated_data.append(row)
+        save_updated_data(updated_data)

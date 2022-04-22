@@ -1,4 +1,3 @@
-from flask import request
 import os
 from datetime import datetime, timezone
 import csv
@@ -24,6 +23,28 @@ def convert_data(datafile):
     return converted_data
 
 
+def convert_questions():
+    return convert_data(QUESTION_DATA_FILE_PATH)
+
+
+def get_converted_question(question_id):
+    for row in convert_questions():
+        if row['id'] == question_id:
+            return row
+
+
+def get_converted_answers(question_id):
+    answers = []
+    for row in convert_answers():
+        if row['question_id'] == question_id:
+            answers.append(row)
+    return answers
+
+
+def convert_answers():
+    return convert_data(ANSWER_DATA_FILE_PATH)
+
+
 def save_new_answer(new_answer):
     data_file = open(ANSWER_DATA_FILE_PATH, 'a', newline='')
     fieldnames = ANSWER_HEADERS
@@ -45,25 +66,45 @@ def get_current_time():
     return current_time
 
 
-def add_answer(question_id):
-    answers = convert_data(ANSWER_DATA_FILE_PATH)
+def add_answer(question_id, message):
     answer = {}
-    answer['id'] = len(answers) + 1
+    answer['id'] = len(get_answers()) + 1
     answer['submission_time'] = get_current_time()
     answer['vote_number'] = '0'
     answer['question_id'] = question_id
-    answer['message'] = request.form['message']
+    answer['message'] = message
     answer['image'] = 'img.url'
     save_new_answer(answer)
 
 
-def update_data(question_id, questions):
+def update_question(question_id, title, message):
     updated_data = []
-    for row in questions:
-        for key, value in row.items():
-            if key == 'id' and value == question_id:
-                row['title'] = request.form['title']
-                row['message'] = request.form['message']
-                row['submission_time'] = get_current_time()
+    for row in get_questions():
+        if row['id'] == question_id:
+            row['title'] = title
+            row['message'] = message
+            row['submission_time'] = get_current_time()
         updated_data.append(row)
         save_updated_data(updated_data)
+
+
+def get_answers():
+    return get_data(ANSWER_DATA_FILE_PATH)
+
+
+def get_answer(question_id):
+    answers = get_answers()
+    for row in answers:
+        if row['question_id'] == question_id:
+            return row
+
+
+def get_questions():
+    return get_data(QUESTION_DATA_FILE_PATH)
+
+
+def get_question(question_id):
+    questions = get_questions()
+    for row in questions:
+        if row['id'] == question_id:
+            return row

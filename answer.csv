@@ -1,3 +1,11 @@
 id,submission_time,vote_number,question_id,message,image
 1,1493398154,4,1,"You need to use brackets: my_list = []",
 2,1493088154,35,1,"Look it up in the Python docs",
+3,1650615695,0,1,frerfe,img.url
+4,1650615704,0,1,erferfe,img.url
+5,1650615883,0,1,ascasc,img.url
+6,1650615924,0,1,bla bla ,img.url
+7,1650615996,0,1,bla bla bla ,img.url
+8,1650617308,0,1,ascascasc,img.url
+9,1650617699,0,1,ooko,img.url
+10,1650618603,0,1,,img.url

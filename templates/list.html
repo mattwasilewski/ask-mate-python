@@ -2,26 +2,28 @@
 {% block title %} Questions | AskMate {% endblock %}
 {% block content %}
     {{ super() }}
-    <form action="/list?order_by={{ value }}" method="post">
-        <label for="order">Sorted by:</label>
-        <select onchange="this.form.submit()" name="order" id="order">
-    {#    {% for row in questions %}#}
-    {#        {% for key in row.keys() %}#}
-            <option value="submission-time">Submission time</option>
+    <form method="get">
+        <label for="sort">Sorted by:</label>
+        <select name="sort_by" id="sort">
+            <option value="time">Submission time</option>
             <option value="title">Title</option>
             <option value="message">Message</option>
-            <option value="number-of-views">Number of views</option>
-            <option value="number-of-votes">Number of votes</option>
-    {#    {% endfor %}#}
-    {#    {% endfor %}#}
+            <option value="views">Number of views</option>
+            <option value="votes">Number of votes</option>
         </select>
+        <label for="order">Order:</label>
+        <select name="order_direction" id="order">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+        </select>
+        <button type="submit">Sort</button>
     </form>
     <div>
         {% for row in questions %}
-            <p  id="questions"><a href="/question/{{ row['id'] }}">{{ row['title'] }}</a>
+            <p id="questions"><a href="/question/{{ row['id'] }}">{{ row['title'] }}</a>
                 <br>
                 <br>
-                <small>Asked: {{ date[loop.index - 1] }}</small>
+                <small>Posted on: {{ row['submission_time'] }}</small>
             </p>
         {% endfor %}
     </div>

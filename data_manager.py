@@ -74,7 +74,7 @@ def add_answer(question_id, message):
     answer['vote_number'] = '0'
     answer['question_id'] = question_id
     answer['message'] = message
-    answer['image'] = 'img.url'
+    answer['image'] = 'image'
     save_new_answer(answer)
 
 

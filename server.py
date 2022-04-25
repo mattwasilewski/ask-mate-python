@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import data_manager
 import util
 import os
@@ -48,6 +48,11 @@ def upload_image(question_id):
         destination = "/".join([target, filename])
         upload.save(destination)
     return render_template("question.html", image_name=filename, question_id=question_id)
+
+
+@app.route('/upload/<filename>')
+def send_image(filename):
+    return send_from_directory("static", filename)
 
 
 @app.route("/question/<question_id>/edit", methods=['POST', 'GET'])

@@ -29,17 +29,18 @@
            <form action="{{ "/question/"+ question_id + "/new-answer"}}" method="post">
 <label for="message"><strong>Enter your answer:</strong></label>
         <br>
+   <img src=" {{url_for('send_image', filename=image_name)}}">
         <br>
     <textarea id="message" name="message" rows="6" cols="60"></textarea>
         <br>
             <input type="submit" value="Submit">
         </form>
-<form id="upload-form" action="{{ url_for('upload_image', question_id=question_id) }}" method="POST" enctype="multipart/form-data">
-    <strong>Files:</strong><br>
-    <input id="file-picker" type="file" name="file" accept="image/*" multiple>
-    <div id="msg"></div>
-    <input type="submit" value="Upload!" id="upload-button">
-</form>
+            <form id="upload-form" action="{{ url_for('upload_image', question_id=question_id) }}" method="POST" enctype="multipart/form-data">
+                <strong>Files:</strong><br>
+                <input id="file-picker" type="file" name="file" accept="image/*" multiple>
+                <div id="msg"></div>
+                <input type="submit" value="Upload!" id="upload-button">
+            </form>
         </div>
         {% endif %}
     {% endblock %}

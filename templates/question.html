@@ -1,25 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
     <div id="question-page">
-    {% if new_answer==None %}
-        {% for row in questions %}
-            {% if row['id'] == question_id %}
-                <h2>{{ row['title'] }}
-                <button><a href="{{ url_for('edit_question', question_id=question_id )}}">Edit</a></button>
-                </h2>
-                    <p>{{ row['message'] }}</p>
-            {% endif %}
-        {% endfor %}
-        {% for row in answers %}
-            {% if row['question_id'] == question_id %}
-                <p>{{ row['message'] }}</p>
-            {% endif %}
-        {% endfor %}
-        <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
+        {% if new_answer==None %}
+            <h2>{{ question['title'] }}
+            <button><a href="{{ url_for('edit_question', question_id=question_id )}}">Edit</a></button>
+                <form action="{{ url_for('delete_question', question_id=question_id) }}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </h2>
+            <p>{{ question['message'] }}
+                <br>
+                <small>Posted on: {{ question['submission_time'] }}</small>
+            </p>
+            <h3>Answers:</h3>
+            {% for row in answers %}
+            <p>{{ row['message'] }}
+                <br>
+                <small>Posted on: {{ row['submission_time'] }}</small>
+{#todo w przypadku edycji dodac edited on + posted on#}
+            </p>
+            {% endfor %}
+            <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
+            <button><a href="{{ url_for('route_list') }}">Go back</a></button>
+
     </div>
     {% else %}
-    <div id="new-answer-page">
-<form action="{{ "/question/"+ question_id + "/new-answer"}}" method="post">
+        <div id="new-answer-page">
+           <form action="{{ "/question/"+ question_id + "/new-answer"}}" method="post">
 <label for="message"><strong>Enter your answer:</strong></label>
         <br>
         <br>
@@ -33,7 +40,6 @@
     <div id="msg"></div>
     <input type="submit" value="Upload!" id="upload-button">
 </form>
-<img src=" {{url_for('static', filename=image_name)}} ">
-    </div>
-    {% endif %}
-{% endblock %}
+        </div>
+        {% endif %}
+    {% endblock %}

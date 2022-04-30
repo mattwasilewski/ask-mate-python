@@ -16,6 +16,11 @@
             {% for row in answers %}
             <p>{{ row['message'] }}
                 <br>
+                {% if row['image'] != '' %}
+                <img src="{{'/' + row['image'] }}"/>
+                {% endif %}
+
+                <br>
                 <small>Posted on: {{ row['submission_time'] }}</small>
 {#todo w przypadku edycji dodac edited on + posted on#}
             </p>
@@ -26,21 +31,21 @@
     </div>
     {% else %}
         <div id="new-answer-page">
-           <form action="{{ "/question/"+ question_id + "/new-answer"}}" method="post">
+           <form action="{{ "/question/"+ question_id + "/new-answer"}}" method="post" enctype="multipart/form-data">
 <label for="message"><strong>Enter your answer:</strong></label>
         <br>
-   <img src=" {{url_for('send_image', filename=image_name)}}">
         <br>
     <textarea id="message" name="message" rows="6" cols="60"></textarea>
         <br>
+           <strong>Add image:</strong>
+           <input type="file" id="question-image" name="question-image">
             <input type="submit" value="Submit">
         </form>
-            <form id="upload-form" action="{{ url_for('upload_image', question_id=question_id) }}" method="POST" enctype="multipart/form-data">
-                <strong>Files:</strong><br>
-                <input id="file-picker" type="file" name="file" accept="image/*" multiple>
-                <div id="msg"></div>
-                <input type="submit" value="Upload!" id="upload-button">
-            </form>
+
+
+
         </div>
         {% endif %}
     {% endblock %}
+
+

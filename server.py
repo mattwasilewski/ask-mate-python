@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 import data_manager
 import util
 import os
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
@@ -37,17 +38,6 @@ def new_answer(question_id):
         data_manager.add_answer(question_id, request.form['message'])
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('question.html', question_id=question_id)
-
-
-@app.route("/update/<question_id>", methods=['POST', 'GET'])
-def upload_image(question_id):
-    app_root = os.path.dirname(os.path.abspath(__file__))
-    target = os.path.join(app_root, 'static/')
-    for upload in request.files.getlist("file"):
-        filename = upload.filename
-        destination = "/".join([target, filename])
-        upload.save(destination)
-    return render_template("question.html", image_name=filename, question_id=question_id)
 
 
 @app.route('/upload/<filename>')

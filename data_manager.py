@@ -1,11 +1,16 @@
 import os
 from datetime import datetime, timezone
 import csv
+from flask import request
+from werkzeug.utils import secure_filename
 
-QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'question.csv'
-ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'answer.csv'
+QUESTION_DATA_FILE_PATH = "C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\question.csv"
+ANSWER_DATA_FILE_PATH = "C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\answer.csv"
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+UPLOAD_FOLDER = 'static/images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+BASEPATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 
 def get_data(datafile):
@@ -66,14 +71,25 @@ def get_current_time():
     return current_time
 
 
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+
 def add_answer(question_id, message):
     answer = {}
+    filename = ''
+    if 'question-image' in request.files:
+        file = request.files['question-image']
+        if file.filename != '' and file and allowed_file(file.filename, ALLOWED_EXTENSIONS):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(BASEPATH + UPLOAD_FOLDER, filename))
     answer['id'] = len(get_answers()) + 1
     answer['submission_time'] = get_current_time()
     answer['vote_number'] = '0'
     answer['question_id'] = question_id
     answer['message'] = message
-    answer['image'] = 'img.url'
+    answer['image'] = UPLOAD_FOLDER + '/' + filename
     save_new_answer(answer)
 
 

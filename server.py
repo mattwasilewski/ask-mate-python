@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import data_manager
 import util
+import os
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 
@@ -32,10 +35,14 @@ def display_question(question_id):
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
 def new_answer(question_id):
     if request.method == 'POST':
-        print('siema')
         data_manager.add_answer(question_id, request.form['message'])
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('question.html', question_id=question_id)
+
+
+@app.route('/upload/<filename>')
+def send_image(filename):
+    return send_from_directory("static", filename)
 
 
 @app.route("/question/<question_id>/edit", methods=['POST', 'GET'])

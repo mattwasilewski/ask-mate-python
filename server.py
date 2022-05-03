@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 import os
 from werkzeug.utils import secure_filename
 
+UPLOAD_FOLDER = 'static/images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 load_dotenv()
 app = Flask(__name__)
 
@@ -39,10 +42,20 @@ def display_question(question_id):
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
 def new_answer(question_id):
+    filename = ''
     if request.method == 'POST':
-        data_manager.add_answer(question_id, request.form['message'])
+        if 'question-image' in request.files:
+            file = request.files['question-image']
+            if file.filename != '' and file and data_manager.allowed_file(file.filename, ALLOWED_EXTENSIONS):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(BASE_PATH + UPLOAD_FOLDER, filename))
+        submission_time = data_manager.get_current_time()
+        vote_number = '0'
+        message = request.form.get('message')
+        image = UPLOAD_FOLDER + '/' + filename
+        data_manager.add_answer(submission_time, vote_number, question_id, message, image)
         return redirect(url_for('display_question', question_id=question_id))
-    return render_template('question.html', question_id=question_id)
+    return render_template('answer.html', question_id=question_id)
 
 
 @app.route('/upload/<filename>')

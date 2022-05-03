@@ -14,14 +14,14 @@ UPLOAD_FOLDER = 'static/images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 BASEPATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 
-
+#todo do wyrzucenia
 def get_data(datafile):
     with open(datafile) as csvfile:
         reader = csv.DictReader(csvfile)
         items = [dict(story) for story in reader]
         return items
 
-
+#todo do wyrzucenia
 def convert_data(datafile):
     converted_data = get_data(datafile)
     for row in converted_data:
@@ -29,11 +29,11 @@ def convert_data(datafile):
         row['submission_time'] = f"{value:%Y-%m-%d %H:%M:%S}"
     return converted_data
 
-
+#todo do wyrzucenia
 def convert_questions():
     return convert_data(QUESTION_DATA_FILE_PATH)
 
-
+#todo do wyrzucenia
 def get_converted_question(question_id):
     for row in convert_questions():
         if row['id'] == question_id:
@@ -53,13 +53,22 @@ def get_questions_desc(cursor, sort_method):
 
 @database_common.connection_handler
 def get_questions_asc(cursor, sort_method):
-    print(sql.Identifier(sort_method))
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
         ORDER BY {col} asc""")
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_question_by_id(cursor, question_id):
+    query = """
+        SELECT title, message, submission_time, vote_number, view_number
+        FROM question
+        WHERE id = %s"""
+    cursor.execute(query, (question_id,))
+    return cursor.fetchone()
 
 
 def get_converted_answers(question_id):

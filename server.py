@@ -9,9 +9,14 @@ load_dotenv()
 app = Flask(__name__)
 
 
-@app.route("/")
-def hello():
-    return "Hello World!"
+# @app.route("/")
+# def main_page():
+#     return render_template('index.html')
+
+
+@app.route("/add-question")
+def add_question():
+    return render_template('add-question.html')
 
 
 @app.route("/list")

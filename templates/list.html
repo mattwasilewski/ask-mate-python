@@ -19,11 +19,13 @@
         <button type="submit">Sort</button>
     </form>
     <div>
-        {% for row in sorted_questions %}
-            <p id="questions"><a href="/question/{{ row['id'] }}">{{ row['title'] }}</a>
+        {% for question in questions %}
+            <p id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>
                 <br>
                 <br>
-                <small>Posted on: {{ row['submission_time'] }}</small>
+                {{ question.view_number }} views {{ question.vote_number }} votes
+                <br>
+                <small>Posted on: {{ question.submission_time }}</small>
             </p>
         {% endfor %}
     </div>

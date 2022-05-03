@@ -18,12 +18,11 @@ def hello():
 
 @app.route("/list")
 def route_list():
-    #todo pojedyncza zmienic iteracje w pliku list.html na iteracje w pythonie - o ile się da?
     query_parameters = request.args
     sort_method = query_parameters.get('order_by')
     order = query_parameters.get('order_direction')
-    sorted_questions = util.get_sorted_questions(sort_method, order)
-    return render_template('list.html', sorted_questions=sorted_questions)
+    question = util.get_sorted_questions(sort_method, order)
+    return render_template('list.html', questions=question)
 
 
 @app.route("/question/<question_id>")

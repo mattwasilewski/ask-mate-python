@@ -4,6 +4,10 @@ import psycopg2.extras
 
 
 def get_connection_string():
+    os.environ['PSQL_USER_NAME'] = 'postgres'
+    os.environ['PSQL_PASSWORD'] = 'superuser'
+    os.environ['PSQL_HOST'] = 'localhost'
+    os.environ['PSQL_DB_NAME'] = 'ask-mate-2'
 
     user_name = os.environ.get('PSQL_USER_NAME')
     password = os.environ.get('PSQL_PASSWORD')

@@ -8,9 +8,6 @@ QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.
 ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/answer.csv'
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
-UPLOAD_FOLDER = 'static/images'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-BASEPATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 
 def get_data(datafile):
@@ -58,6 +55,36 @@ def get_questions_asc(cursor, sort_method):
         ORDER BY {col} asc""")
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_question_by_id(cursor, question_id):
+    query = """
+        SELECT title, message, submission_time, vote_number, view_number, image
+        FROM question
+        WHERE id = %s"""
+    cursor.execute(query, (question_id,))
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
+def get_answers_by_id(cursor, question_id):
+    query = """
+        SELECT message, submission_time, vote_number, image
+        FROM answer
+        WHERE question_id = %s"""
+    cursor.execute(query, (question_id,))
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def update_question(cursor, question_id, title, message):
+    query = """
+        UPDATE question 
+        SET title = %(new_title)s, message = %(new_message)s
+        WHERE id = %(id)s
+        """
+    cursor.execute(query, {'new_title': title, 'new_message': message, 'id': question_id})
 
 
 def get_converted_answers(question_id):

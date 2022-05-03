@@ -1,26 +1,31 @@
-from data_manager import convert_questions
+import data_manager
 
 
 def get_sorted_questions(sort_method, order):
-    if order is None:
-        order = 'desc'
     if sort_method is None:
         sort_method = 'time'
-    order = True if order == 'desc' else False
-    return sort_questions_by(sort_method, order)
+    if order is None or order == 'desc':
+        return sort_questions_by(sort_method, data_manager.get_questions_desc)
+    else:
+        return sort_questions_by(sort_method, data_manager.get_questions_asc)
 
 
-def sort_questions_by(sort_method, order):
-    questions = convert_questions()
+def sort_questions_by(sort_method, function):
+    # questions = convert_questions()
     match sort_method:
         case 'title':
-            return sorted(questions, key=lambda item: item['title'], reverse=order)
+            # return sorted(questions, key=lambda item: item['title'], reverse=order)
+            return function('title')
         case 'time':
-            return sorted(questions, key=lambda item: item['submission_time'], reverse=order)
+            return function('submission_time')
+            # return sorted(questions, key=lambda item: item['submission_time'], reverse=order)
         case 'message':
-            return sorted(questions, key=lambda item: item['message'], reverse=order)
+            return function('message')
+            # return sorted(questions, key=lambda item: item['message'], reverse=order)
         case 'views':
-            return sorted(questions, key=lambda item: int(item['view_number']), reverse=order)
+            return function('view_number')
+            # return sorted(questions, key=lambda item: int(item['view_number']), reverse=order)
         case 'votes':
-            return sorted(questions, key=lambda item: int(item['vote_number']), reverse=order)
+            return function('vote_number')
+            # return sorted(questions, key=lambda item: int(item['vote_number']), reverse=order)
 

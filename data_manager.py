@@ -3,9 +3,11 @@ from datetime import datetime, timezone
 import csv
 from flask import request
 from werkzeug.utils import secure_filename
+from psycopg2 import sql
+import database_common
 
-QUESTION_DATA_FILE_PATH = "C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\question.csv"
-ANSWER_DATA_FILE_PATH = "C:\\Users\\lenovo\\Desktop\\workspace\\web\\ask-mate-1-python-mattwasilewski\\answer.csv"
+QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/question.csv'
+ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/answer.csv'
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 UPLOAD_FOLDER = 'static/images'
@@ -36,6 +38,28 @@ def get_converted_question(question_id):
     for row in convert_questions():
         if row['id'] == question_id:
             return row
+
+
+@database_common.connection_handler
+def get_questions_desc(cursor, sort_method):
+    print(sql.Identifier(sort_method))
+    query = ("""
+        SELECT id, title, message, submission_time, view_number, vote_number
+        FROM question
+        ORDER BY {col} desc""")
+    cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_questions_asc(cursor, sort_method):
+    print(sql.Identifier(sort_method))
+    query = ("""
+        SELECT id, title, message, submission_time, view_number, vote_number
+        FROM question
+        ORDER BY {col} asc""")
+    cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
+    return cursor.fetchall()
 
 
 def get_converted_answers(question_id):

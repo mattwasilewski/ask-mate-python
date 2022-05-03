@@ -6,3 +6,4 @@ venv
 *.pyc
 __pycache__/
 static/images
+__pycache__/data_manager.cpython-310.pyc

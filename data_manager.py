@@ -42,7 +42,6 @@ def get_converted_question(question_id):
 
 @database_common.connection_handler
 def get_questions_desc(cursor, sort_method):
-    print(sql.Identifier(sort_method))
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
@@ -64,11 +63,21 @@ def get_questions_asc(cursor, sort_method):
 @database_common.connection_handler
 def get_question_by_id(cursor, question_id):
     query = """
-        SELECT title, message, submission_time, vote_number, view_number
+        SELECT title, message, submission_time, vote_number, view_number, image
         FROM question
         WHERE id = %s"""
     cursor.execute(query, (question_id,))
     return cursor.fetchone()
+
+
+@database_common.connection_handler
+def get_answers_by_id(cursor, question_id):
+    query = """
+        SELECT message, submission_time, vote_number, image
+        FROM answer
+        WHERE question_id = %s"""
+    cursor.execute(query, (question_id,))
+    return cursor.fetchall()
 
 
 def get_converted_answers(question_id):

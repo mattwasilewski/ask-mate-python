@@ -11,21 +11,24 @@
             <p>{{ question.view_number }} views {{ question.vote_number }} votes
                 <br><br>
                 {{ question.message }}
+                {% if question.image != None %}
+                <img src="{{'/static/' + question.image }}" alt="question_image">
+                {% endif %}
                 <br><br>
                 <small>Posted on: {{ question.submission_time }}</small>
 
                 <br>
             </p>
             <h3>Answers:</h3>
-            {% for row in answers %}
-            <p>{{ row['message'] }}
+            {% for answer in answers %}
+            <p>{{ answer.message }}
                 <br>
-                {% if row['image'] != '' %}
-                <img src="{{'/' + row['image'] }}"/>
+                {% if answer.image != None %}
+                <img src="{{'/static/' + answer.image }}" alt="answer_image"/>
                 {% endif %}
 
                 <br>
-                <small>Posted on: {{ row['submission_time'] }}</small>
+                <small>Posted on: {{ answer.submission_time }}</small>
 {#todo w przypadku edycji dodac edited on + posted on#}
             </p>
             {% endfor %}

@@ -60,7 +60,7 @@ def send_image(filename):
 
 @app.route("/question/<question_id>/edit", methods=['POST', 'GET'])
 def edit_question(question_id):
-    question = data_manager.get_question(question_id)
+    question = data_manager.get_question_by_id(question_id)
     if request.method == 'POST':
         data_manager.update_question(question_id, request.form['title'], request.form['message'])
         return redirect(url_for('display_question', question_id=question_id))

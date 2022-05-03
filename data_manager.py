@@ -9,14 +9,14 @@ ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.en
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
-
+#todo do wyrzucenia
 def get_data(datafile):
     with open(datafile) as csvfile:
         reader = csv.DictReader(csvfile)
         items = [dict(story) for story in reader]
         return items
 
-
+#todo do wyrzucenia
 def convert_data(datafile):
     converted_data = get_data(datafile)
     for row in converted_data:
@@ -24,11 +24,11 @@ def convert_data(datafile):
         row['submission_time'] = f"{value:%Y-%m-%d %H:%M:%S}"
     return converted_data
 
-
+#todo do wyrzucenia
 def convert_questions():
     return convert_data(QUESTION_DATA_FILE_PATH)
 
-
+#todo do wyrzucenia
 def get_converted_question(question_id):
     for row in convert_questions():
         if row['id'] == question_id:
@@ -37,7 +37,6 @@ def get_converted_question(question_id):
 
 @database_common.connection_handler
 def get_questions_desc(cursor, sort_method):
-    print(sql.Identifier(sort_method))
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
@@ -48,7 +47,6 @@ def get_questions_desc(cursor, sort_method):
 
 @database_common.connection_handler
 def get_questions_asc(cursor, sort_method):
-    print(sql.Identifier(sort_method))
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
@@ -137,15 +135,15 @@ def add_answer(cursor, submission_time, vote_number, question_id, message, image
                            'message': message, 'image': image})
 
 
-def update_question(question_id, title, message):
-    updated_data = []
-    for row in get_questions():
-        if row['id'] == question_id:
-            row['title'] = title
-            row['message'] = message
-            row['submission_time'] = get_current_time()
-        updated_data.append(row)
-        save_updated_data(updated_data)
+# def update_question(question_id, title, message):
+#     updated_data = []
+#     for row in get_questions():
+#         if row['id'] == question_id:
+#             row['title'] = title
+#             row['message'] = message
+#             row['submission_time'] = get_current_time()
+#         updated_data.append(row)
+#         save_updated_data(updated_data)
 
 
 def get_answers():

@@ -28,9 +28,6 @@ def display_question(question_id):
     new_answer = None
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_id(question_id)
-    # print(question['title'])
-    # question = data_manager.get_converted_question(question_id)
-    # answers = data_manager.get_converted_answers(question_id)
     return render_template('question.html', answers=answers, question=question,
                            question_id=question_id, new_answer=new_answer)
 
@@ -50,7 +47,7 @@ def send_image(filename):
 
 @app.route("/question/<question_id>/edit", methods=['POST', 'GET'])
 def edit_question(question_id):
-    question = data_manager.get_question(question_id)
+    question = data_manager.get_question_by_id(question_id)
     if request.method == 'POST':
         data_manager.update_question(question_id, request.form['title'], request.form['message'])
         return redirect(url_for('display_question', question_id=question_id))

@@ -80,6 +80,16 @@ def get_answers_by_id(cursor, question_id):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def update_question(cursor, question_id, title, message):
+    query = """
+        UPDATE question 
+        SET title = %(new_title)s, message = %(new_message)s
+        WHERE id = %(id)s
+        """
+    cursor.execute(query, {'new_title': title, 'new_message': message, 'id': question_id})
+
+
 def get_converted_answers(question_id):
     answers = []
     for row in convert_answers():
@@ -135,15 +145,15 @@ def add_answer(question_id, message):
     save_new_answer(answer)
 
 
-def update_question(question_id, title, message):
-    updated_data = []
-    for row in get_questions():
-        if row['id'] == question_id:
-            row['title'] = title
-            row['message'] = message
-            row['submission_time'] = get_current_time()
-        updated_data.append(row)
-        save_updated_data(updated_data)
+# def update_question(question_id, title, message):
+#     updated_data = []
+#     for row in get_questions():
+#         if row['id'] == question_id:
+#             row['title'] = title
+#             row['message'] = message
+#             row['submission_time'] = get_current_time()
+#         updated_data.append(row)
+#         save_updated_data(updated_data)
 
 
 def get_answers():

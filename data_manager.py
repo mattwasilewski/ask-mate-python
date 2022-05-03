@@ -1,8 +1,6 @@
 import os
 from datetime import datetime, timezone
 import csv
-from flask import request
-from werkzeug.utils import secure_filename
 from psycopg2 import sql
 import database_common
 
@@ -10,9 +8,6 @@ QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.
 ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/answer.csv'
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
-UPLOAD_FOLDER = 'static/images'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-BASEPATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 #todo do wyrzucenia
 def get_data(datafile):
@@ -120,7 +115,9 @@ def save_updated_data(updated_data):
 
 def get_current_time():
     current_time = int(datetime.now().replace(tzinfo=timezone.utc).timestamp())
-    return current_time
+    value = datetime.utcfromtimestamp(current_time)
+    date_format = f"{value:%Y-%m-%d %H:%M:%S}"
+    return date_format
 
 
 def allowed_file(filename, allowed_extensions):
@@ -128,21 +125,14 @@ def allowed_file(filename, allowed_extensions):
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
-def add_answer(question_id, message):
-    answer = {}
-    filename = ''
-    if 'question-image' in request.files:
-        file = request.files['question-image']
-        if file.filename != '' and file and allowed_file(file.filename, ALLOWED_EXTENSIONS):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(BASEPATH + UPLOAD_FOLDER, filename))
-    answer['id'] = len(get_answers()) + 1
-    answer['submission_time'] = get_current_time()
-    answer['vote_number'] = '0'
-    answer['question_id'] = question_id
-    answer['message'] = message
-    answer['image'] = UPLOAD_FOLDER + '/' + filename
-    save_new_answer(answer)
+@database_common.connection_handler
+def add_answer(cursor, submission_time, vote_number, question_id, message, image):
+    query = """
+        INSERT INTO answer(submission_time, vote_number, question_id, message, image)
+        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s)
+         """
+    cursor.execute(query, {'submission_time': submission_time, 'vote_number': vote_number, 'question_id':question_id,
+                           'message': message, 'image': image})
 
 
 # def update_question(question_id, title, message):

@@ -79,21 +79,36 @@ def delete_question(question_id):
 
 @app.route("/answer/<answer_id>/delete", methods=['POST'])
 def delete_answer(answer_id):
+    #todo jak dostać sie do question id w inny sposob -> jest w templatce html
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
     data_manager.delete_answer(answer_id)
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route("/question/<question_id>/vote-up", methods=['POST'])
-def vote_up(question_id):
-    data_manager.increase_vote_number_count(question_id)
+def question_vote_up(question_id):
+    data_manager.increase_question_vote_number_count(question_id)
     return redirect(url_for('route_list'))
 
 
 @app.route("/question/<question_id>/vote-down", methods=['POST'])
-def vote_down(question_id):
-    data_manager.decrease_vote_number_count(question_id)
+def question_vote_down(question_id):
+    data_manager.decrease_question_vote_number_count(question_id)
     return redirect(url_for('route_list'))
+
+
+@app.route("/answer/<answer_id>/vote-up", methods=['POST'])
+def answer_vote_up(answer_id):
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    data_manager.increase_answer_vote_number_count(answer_id)
+    return redirect(url_for('display_question', question_id=question_id))
+
+
+@app.route("/question/<answer_id>/vote-down", methods=['POST'])
+def answer_vote_down(answer_id):
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    data_manager.decrease_answer_vote_number_count(answer_id)
+    return redirect(url_for('display_question', question_id=question_id))
 
 
 if __name__ == "__main__":

@@ -19,7 +19,9 @@
         </p>
         <h3>Answers:</h3>
         {% for answer in answers %}
-        <div>{{ answer.message }}
+
+        <div>
+            {{ answer.message }}
             <br>
             {% if answer.image != None %}
             <img src="{{'/' + answer.image }}" alt="answer-image"/>
@@ -27,11 +29,25 @@
             <form action="{{ url_for('delete_answer', answer_id=answer.id) }}" method="post">
                 <button type="submit">Delete</button>
             </form>
+
+
+            <form action="{{ url_for('answer_vote_up', answer_id=answer.id) }}" method="post">
+                <button type="submit">Vote up</button>
+            </form>
+            <form action="{{ url_for('answer_vote_down', answer_id=answer.id) }}" method="post">
+                <button type="submit">Vote down</button>
+            </form>
+
+
+            {{ answer.vote_number }} votes
+            <br>
             <small>Posted on: {{ answer.submission_time }}</small>
             <br><br>
         {#todo w przypadku edycji dodac edited on + posted on#}
         </div>
+
         {% endfor %}
+
         <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
         <button><a href="{{ url_for('route_list') }}">Go back</a></button>
     </div>

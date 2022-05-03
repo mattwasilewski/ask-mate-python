@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import data_manager
 import util
+from dotenv import load_dotenv
 import os
 from werkzeug.utils import secure_filename
 
-
+load_dotenv()
 app = Flask(__name__)
 
 

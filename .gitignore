@@ -2,5 +2,5 @@
 venv
 .env
 *.csv
-__pycache__/
 /sample_data
+*.pyc

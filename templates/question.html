@@ -19,16 +19,18 @@
         </p>
         <h3>Answers:</h3>
         {% for answer in answers %}
-        <p>{{ answer.message }}
+        <div>{{ answer.message }}
             <br>
             {% if answer.image != None %}
             <img src="{{'/' + answer.image }}" alt="answer-image"/>
             {% endif %}
-
-            <br>
+            <form action="{{ url_for('delete_answer', answer_id=answer.id) }}" method="post">
+                <button type="submit">Delete</button>
+            </form>
             <small>Posted on: {{ answer.submission_time }}</small>
-{#todo w przypadku edycji dodac edited on + posted on#}
-        </p>
+            <br><br>
+        {#todo w przypadku edycji dodac edited on + posted on#}
+        </div>
         {% endfor %}
         <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
         <button><a href="{{ url_for('route_list') }}">Go back</a></button>

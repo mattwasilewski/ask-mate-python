@@ -51,7 +51,7 @@ def get_last_question(cursor):
 @database_common.connection_handler
 def get_answers_by_id(cursor, question_id):
     query = """
-        SELECT message, submission_time, vote_number, image
+        SELECT id, message, submission_time, vote_number, image
         FROM answer
         WHERE question_id = %s"""
     cursor.execute(query, (question_id,))
@@ -109,6 +109,16 @@ def add_answer(cursor, submission_time, vote_number, question_id, message, image
 
 
 @database_common.connection_handler
+def get_question_id_by_answer_id(cursor, answer_id):
+    query = """
+           SELECT question_id
+           FROM answer
+           WHERE id = %s"""
+    cursor.execute(query, (answer_id,))
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
 def delete_question(cursor, question_id):
     query = """
         DELETE
@@ -116,3 +126,11 @@ def delete_question(cursor, question_id):
         WHERE id = %s"""
     cursor.execute(query, (question_id,))
 
+
+@database_common.connection_handler
+def delete_answer(cursor, answer_id):
+    query = """
+        DELETE
+        FROM answer
+        WHERE id = %s"""
+    cursor.execute(query, (answer_id,))

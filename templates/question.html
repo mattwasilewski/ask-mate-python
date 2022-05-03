@@ -1,38 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
     <div id="question-page">
-            <h2>{{ question.title }}
-            <button><a href="{{ url_for('edit_question', question_id=question_id )}}">Edit</a></button>
-                <form action="{{ url_for('delete_question', question_id=question_id) }}" method="post">
-                    <button type="submit">Delete</button>
-                </form>
-            </h2>
-            <p>{{ question.view_number }} views {{ question.vote_number }} votes
-                <br><br>
-                {{ question.message }}
-                {% if question.image != None %}
-                <img src="{{'/static/' + question.image }}" alt="question_image">
-                {% endif %}
-                <br><br>
-                <small>Posted on: {{ question.submission_time }}</small>
+        <h2>{{ question.title }}
+        <button><a href="{{ url_for('edit_question', question_id=question_id )}}">Edit</a></button>
+        <form action="{{ url_for('delete_question', question_id=question_id) }}" method="post">
+            <button type="submit">Delete</button>
+        </form>
+        </h2>
+        <p>{{ question.view_number }} views {{ question.vote_number }} votes
+            <br><br>
+            {{ question.message }}
+            {% if question.image != None %}
+            <img src="{{'/static/' + question.image }}" alt="question_image">
+            {% endif %}
+            <br><br>
+            <small>Posted on: {{ question.submission_time }}</small>
+            <br>
+        </p>
+        <h3>Answers:</h3>
+        {% for answer in answers %}
+        <p>{{ answer.message }}
+            <br>
+            {% if answer.image != None %}
+            <img src="{{'/' + answer.image }}" alt="answer-image"/>
+            {% endif %}
 
-                <br>
-            </p>
-            <h3>Answers:</h3>
-            {% for answer in answers %}
-            <p>{{ answer.message }}
-                <br>
-                {% if answer.image != None %}
-                <img src="{{'/' + answer.image }}"/>
-                {% endif %}
-
-                <br>
-                <small>Posted on: {{ answer.submission_time }}</small>
+            <br>
+            <small>Posted on: {{ answer.submission_time }}</small>
 {#todo w przypadku edycji dodac edited on + posted on#}
-            </p>
-            {% endfor %}
-            <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
-            <button><a href="{{ url_for('route_list') }}">Go back</a></button>
-
+        </p>
+        {% endfor %}
+        <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
+        <button><a href="{{ url_for('route_list') }}">Go back</a></button>
     </div>
     {% endblock %}

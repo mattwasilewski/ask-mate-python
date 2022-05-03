@@ -33,11 +33,10 @@ def route_list():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    new_answer = None
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_id(question_id)
     return render_template('question.html', answers=answers, question=question,
-                           question_id=question_id, new_answer=new_answer)
+                           question_id=question_id)
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])

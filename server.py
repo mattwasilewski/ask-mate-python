@@ -73,8 +73,8 @@ def edit_question(question_id):
 
 @app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
-    print('test')
-    return redirect(url_for('display_question', question_id=question_id))
+    data_manager.delete_question(question_id)
+    return redirect(url_for('route_list'))
 
 
 if __name__ == "__main__":

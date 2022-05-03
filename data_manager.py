@@ -108,3 +108,11 @@ def add_answer(cursor, submission_time, vote_number, question_id, message, image
                            'message': message, 'image': image})
 
 
+@database_common.connection_handler
+def delete_question(cursor, question_id):
+    query = """
+        DELETE
+        FROM question
+        WHERE id = %s"""
+    cursor.execute(query, (question_id,))
+

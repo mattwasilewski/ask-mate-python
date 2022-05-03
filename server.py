@@ -12,13 +12,12 @@ load_dotenv()
 app = Flask(__name__)
 
 
-# @app.route("/")
-# def main_page():
-#     return render_template('index.html')
-
-
-@app.route("/add-question")
+@app.route("/add-question", methods=['GET', 'POST'])
 def add_question():
+    if request.method == 'POST':
+        data_manager.set_question_data(request.form['title'], request.form['message'])
+        question_id = data_manager.get_last_question()['id']
+        return redirect(url_for('display_question', question_id=question_id))
     return render_template('add-question.html')
 
 
@@ -51,6 +50,7 @@ def new_answer(question_id):
         submission_time = data_manager.get_current_time()
         vote_number = '0'
         message = request.form.get('message')
+        #todo bug ze zdjeciem
         image = UPLOAD_FOLDER + '/' + filename
         data_manager.add_answer(submission_time, vote_number, question_id, message, image)
         return redirect(url_for('display_question', question_id=question_id))
@@ -66,9 +66,9 @@ def send_image(filename):
 def edit_question(question_id):
     question = data_manager.get_question_by_id(question_id)
     if request.method == 'POST':
-        data_manager.update_question(question_id, request.form['title'], request.form['message'])
+        data_manager.edit_question(question_id, request.form['title'], request.form['message'])
         return redirect(url_for('display_question', question_id=question_id))
-    return render_template('edit_question.html', question=question, question_id=question_id)
+    return render_template('edit-question.html', question=question, question_id=question_id)
 
 
 @app.route("/question/<question_id>/delete", methods=['POST'])

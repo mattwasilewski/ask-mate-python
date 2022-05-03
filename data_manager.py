@@ -1,6 +1,5 @@
 import os
 from datetime import datetime, timezone
-import csv
 from psycopg2 import sql
 import database_common
 
@@ -8,31 +7,6 @@ QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.
 ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/answer.csv'
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
-
-#todo do wyrzucenia
-def get_data(datafile):
-    with open(datafile) as csvfile:
-        reader = csv.DictReader(csvfile)
-        items = [dict(story) for story in reader]
-        return items
-
-#todo do wyrzucenia
-def convert_data(datafile):
-    converted_data = get_data(datafile)
-    for row in converted_data:
-        value = datetime.utcfromtimestamp(int(row['submission_time']))
-        row['submission_time'] = f"{value:%Y-%m-%d %H:%M:%S}"
-    return converted_data
-
-#todo do wyrzucenia
-def convert_questions():
-    return convert_data(QUESTION_DATA_FILE_PATH)
-
-#todo do wyrzucenia
-def get_converted_question(question_id):
-    for row in convert_questions():
-        if row['id'] == question_id:
-            return row
 
 
 @database_common.connection_handler
@@ -66,6 +40,15 @@ def get_question_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
+def get_last_question(cursor):
+    query = """
+        SELECT * FROM question 
+        WHERE id = (SELECT max(id) FROM question)"""
+    cursor.execute(query)
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
 def get_answers_by_id(cursor, question_id):
     query = """
         SELECT message, submission_time, vote_number, image
@@ -75,42 +58,32 @@ def get_answers_by_id(cursor, question_id):
     return cursor.fetchall()
 
 
+def set_question_data(title, message):
+    submission_time = get_current_time()
+    view_number = '0'
+    vote_number = '0'
+    image = None
+    add_question_to_database(submission_time, view_number, vote_number, title, message, image)
+
+
 @database_common.connection_handler
-def update_question(cursor, question_id, title, message):
+def add_question_to_database(cursor, submission_time, view_number, vote_number, title, message, image):
+    query = """
+        INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+        VALUES (%(time)s, %(view_n)s, %(vote_n)s, %(title)s, %(message)s, %(image)s)
+    """
+    cursor.execute(query, {'time': submission_time, 'view_n': view_number, 'vote_n': vote_number,
+                           'title': title, 'message': message, 'image': image})
+
+
+@database_common.connection_handler
+def edit_question(cursor, question_id, title, message):
     query = """
         UPDATE question 
         SET title = %(new_title)s, message = %(new_message)s
         WHERE id = %(id)s
         """
     cursor.execute(query, {'new_title': title, 'new_message': message, 'id': question_id})
-
-
-def get_converted_answers(question_id):
-    answers = []
-    for row in convert_answers():
-        if row['question_id'] == question_id:
-            answers.append(row)
-    return answers
-
-
-def convert_answers():
-    return convert_data(ANSWER_DATA_FILE_PATH)
-
-
-def save_new_answer(new_answer):
-    data_file = open(ANSWER_DATA_FILE_PATH, 'a', newline='')
-    fieldnames = ANSWER_HEADERS
-    writer = csv.DictWriter(data_file, fieldnames=fieldnames)
-    writer.writerow(new_answer)
-
-
-def save_updated_data(updated_data):
-    csvfile = open(QUESTION_DATA_FILE_PATH, 'w', newline='')
-    fieldnames = QUESTION_HEADERS
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    writer.writeheader()
-    for story in updated_data:
-        writer.writerow(story)
 
 
 def get_current_time():
@@ -135,34 +108,3 @@ def add_answer(cursor, submission_time, vote_number, question_id, message, image
                            'message': message, 'image': image})
 
 
-# def update_question(question_id, title, message):
-#     updated_data = []
-#     for row in get_questions():
-#         if row['id'] == question_id:
-#             row['title'] = title
-#             row['message'] = message
-#             row['submission_time'] = get_current_time()
-#         updated_data.append(row)
-#         save_updated_data(updated_data)
-
-
-def get_answers():
-    return get_data(ANSWER_DATA_FILE_PATH)
-
-
-def get_answer(question_id):
-    answers = get_answers()
-    for row in answers:
-        if row['question_id'] == question_id:
-            return row
-
-
-def get_questions():
-    return get_data(QUESTION_DATA_FILE_PATH)
-
-
-def get_question(question_id):
-    questions = get_questions()
-    for row in questions:
-        if row['id'] == question_id:
-            return row

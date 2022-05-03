@@ -134,3 +134,21 @@ def delete_answer(cursor, answer_id):
         FROM answer
         WHERE id = %s"""
     cursor.execute(query, (answer_id,))
+
+
+@database_common.connection_handler
+def increase_vote_number_count(cursor, question_id):
+    query = """
+        UPDATE question
+        SET vote_number = vote_number + 1
+        WHERE id = %s """
+    cursor.execute(query, (question_id,))
+
+
+@database_common.connection_handler
+def decrease_vote_number_count(cursor, question_id):
+    query = """
+            UPDATE question
+            SET vote_number = vote_number - 1
+            WHERE id = %s """
+    cursor.execute(query, (question_id,))

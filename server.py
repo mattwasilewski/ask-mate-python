@@ -84,6 +84,18 @@ def delete_answer(answer_id):
     return redirect(url_for('display_question', question_id=question_id))
 
 
+@app.route("/question/<question_id>/vote-up", methods=['POST'])
+def vote_up(question_id):
+    data_manager.increase_vote_number_count(question_id)
+    return redirect(url_for('route_list'))
+
+
+@app.route("/question/<question_id>/vote-down", methods=['POST'])
+def vote_down(question_id):
+    data_manager.decrease_vote_number_count(question_id)
+    return redirect(url_for('route_list'))
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',

@@ -83,6 +83,16 @@ def get_answers_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
+def get_comment_to_answer(cursor, answer_id):
+    query = """
+        SELECT message, submission_time, edited_count
+        FROM comment
+        WHERE answer_id = %s """
+    cursor.execute(query, (answer_id,))
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
 def get_comment_to_question(cursor, question_id):
     query = """
         SELECT message, submission_time, edited_count
@@ -117,6 +127,16 @@ def add_comment_to_question(cursor, question_id, message, submission_time, edite
         VALUES (%(question_id)s, %(message)s, %(submission_time)s, %(edited_count)s)
         """
     cursor.execute(query, {'question_id': int(question_id), 'message': message, 'submission_time': submission_time,
+                           'edited_count': edited_count})
+
+
+@database_common.connection_handler
+def add_comment_to_answer(cursor, answer_id, message, submission_time, edited_count):
+    query = """
+        INSERT INTO comment (answer_id,  message, submission_time, edited_count)
+        VALUES (%(question_id)s, %(message)s, %(submission_time)s, %(edited_count)s)
+        """
+    cursor.execute(query, {'answer_id': int(answer_id), 'message': message, 'submission_time': submission_time,
                            'edited_count': edited_count})
 
 

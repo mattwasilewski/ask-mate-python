@@ -5,7 +5,7 @@
     {% for question in questions %}
         <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>
             <br><br>
-            {{ question.message }}
+            {{ question.q_message }}
             <br><br>
         <form action="{{ url_for('question_vote_up', question_id = question.id) }}" method="post">
             <button type="submit">Vote up</button>
@@ -15,9 +15,9 @@
         </form>
             <br>
             <br>
-            {{ question.view_number }} views {{ question.vote_number }} votes
+            {{ question.view_number }} views {{ question.q_vote_number }} votes
             <br>
-            <small>Posted on: {{ question.submission_time }}</small>
+            <small>Posted on: {{ question.q_submission_time }}</small>
         </div>
     {% endfor %}
         <a href="{{ url_for('main_page') }}">Back to main page</a>

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div id="comment_page">
+       <form action="{{ add_comment_to_question }}" method="post" enctype="multipart/form-data">
+        <label for="message"><strong>Enter your answer:</strong></label>
+            <br>
+            <br>
+        <textarea id="message" name="message" rows="6" cols="60"></textarea>
+            <br>
+        <input type="submit" value="Submit">
+        </form>
+    </div>
+
+{% endblock %}

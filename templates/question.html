@@ -6,6 +6,8 @@
         <form action="{{ url_for('delete_question', question_id=question_id) }}" method="post">
             <button type="submit">Delete</button>
         </form>
+        <button><a href="{{ url_for('add_comment_to_question', question_id=question_id )}}">Add comment</a></button>
+
         </h2>
         <p>{{ question.view_number }} views {{ question.vote_number }} votes
             <br><br>
@@ -17,6 +19,21 @@
             <small>Posted on: {{ question.submission_time }}</small>
             <br>
         </p>
+    <p>
+
+        <table>
+
+        <tr><th><b>Comments:</b></th></tr>
+
+            {% for comment in comments %}
+                <tr><td>Message:<br>{{ comment.message }}</td></tr>
+                <tr><td>Submission time:<br>{{ comment.submission_time }}</td></tr>
+                <tr><td>Edited times:<br>{{ comment.edited_count }}</td></tr>
+                <tr><td>------------------------------------------</td></tr>
+            {% endfor %}
+
+        </table>
+    </p>
         <h3>Answers:</h3>
         {% for answer in answers %}
 
@@ -37,8 +54,6 @@
             <form action="{{ url_for('answer_vote_down', answer_id=answer.id) }}" method="post">
                 <button type="submit">Vote down</button>
             </form>
-
-
             {{ answer.vote_number }} votes
             <br>
             <small>Posted on: {{ answer.submission_time }}</small>

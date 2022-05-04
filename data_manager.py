@@ -2,11 +2,34 @@ import os
 from datetime import datetime, timezone
 from psycopg2 import sql
 import database_common
+from werkzeug.utils import secure_filename
+
 
 QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/question.csv'
 ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/answer.csv'
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+UPLOAD_FOLDER = 'static/images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/'
+
+
+def save_image_path(file, message, question_id):
+    filename = ''
+    if file.filename != '' and file and allowed_file(file.filename, ALLOWED_EXTENSIONS):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(BASE_PATH + UPLOAD_FOLDER, filename))
+    set_image_data(message, filename, question_id)
+
+
+def set_image_data(message, filename, question_id):
+    submission_time = get_current_time()
+    vote_number = '0'
+    if filename != '':
+        image = UPLOAD_FOLDER + '/' + filename
+    else:
+        image = None
+    add_answer(submission_time, vote_number, question_id, message, image)
 
 
 @database_common.connection_handler
@@ -111,9 +134,9 @@ def add_answer(cursor, submission_time, vote_number, question_id, message, image
 @database_common.connection_handler
 def get_question_id_by_answer_id(cursor, answer_id):
     query = """
-           SELECT question_id
-           FROM answer
-           WHERE id = %s"""
+       SELECT question_id
+       FROM answer
+       WHERE id = %s"""
     cursor.execute(query, (answer_id,))
     return cursor.fetchone()
 
@@ -148,9 +171,9 @@ def increase_question_vote_number_count(cursor, question_id):
 @database_common.connection_handler
 def decrease_question_vote_number_count(cursor, question_id):
     query = """
-            UPDATE question
-            SET vote_number = vote_number - 1
-            WHERE id = %s """
+        UPDATE question
+        SET vote_number = vote_number - 1
+        WHERE id = %s """
     cursor.execute(query, (question_id,))
 
 
@@ -166,7 +189,7 @@ def increase_answer_vote_number_count(cursor, answer_id):
 @database_common.connection_handler
 def decrease_answer_vote_number_count(cursor, answer_id):
     query = """
-            UPDATE answer
-            SET vote_number = vote_number - 1
-            WHERE id = %s """
+        UPDATE answer
+        SET vote_number = vote_number - 1
+        WHERE id = %s """
     cursor.execute(query, (answer_id,))

@@ -16,8 +16,10 @@ def main_page():
 @app.route("/search")
 def search_questions():
     searching_phrase = request.args.get('q')
+    questions = data_manager.get_questions_by_searching_phrase(searching_phrase)
+    # data_manager.get_answers_by_searching_phrase(searching_phrase)
 
-    return render_template('search-questions.html', searching_phrase=searching_phrase)
+    return render_template('search-questions.html', searching_phrase=searching_phrase, questions=questions)
 
 
 @app.route("/add-question", methods=['GET', 'POST'])

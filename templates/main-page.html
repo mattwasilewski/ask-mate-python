@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %} AskMate {% endblock %}
+{% block content %}
+    {{ super() }}
+    <form action="/">
+        <label for="search"></label>
+        <input type="text" id="search" placeholder="Search">
+        <button type="submit">Search</button>
+    </form>
+{% endblock %}

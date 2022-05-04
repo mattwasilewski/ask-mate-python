@@ -13,6 +13,13 @@ def main_page():
     return render_template('main-page.html')
 
 
+@app.route("/search")
+def search_questions():
+    searching_phrase = request.args.get('q')
+
+    return render_template('search-questions.html', searching_phrase=searching_phrase)
+
+
 @app.route("/add-question", methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':

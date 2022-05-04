@@ -8,9 +8,9 @@ load_dotenv()
 app = Flask(__name__)
 
 
-@app.route("/")
+'''@app.route("/")
 def main_page():
-    return render_template('main-page.html')
+    return render_template('main-page.html')'''
 
 
 @app.route("/search")

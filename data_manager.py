@@ -165,7 +165,7 @@ def increase_question_vote_number_count(cursor, question_id):
     query = """
         UPDATE question
         SET vote_number = vote_number + 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (question_id,))
 
 
@@ -174,7 +174,7 @@ def decrease_question_vote_number_count(cursor, question_id):
     query = """
         UPDATE question
         SET vote_number = vote_number - 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (question_id,))
 
 
@@ -183,7 +183,7 @@ def increase_answer_vote_number_count(cursor, answer_id):
     query = """
         UPDATE answer
         SET vote_number = vote_number + 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (answer_id,))
 
 
@@ -192,5 +192,17 @@ def decrease_answer_vote_number_count(cursor, answer_id):
     query = """
         UPDATE answer
         SET vote_number = vote_number - 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (answer_id,))
+
+
+@database_common.connection_handler
+def get_questions_by_searching_phrase(cursor, searching_phrase):
+    query = """
+        SELECT title, message, submission_time, view_number, vote_number
+        FROM question
+        WHERE title  LIKE '%%' || %(phrase)s || '%%' 
+        OR message LIKE '%%' || %(phrase)s  || '%%'
+        """
+    cursor.execute(query, {'phrase': searching_phrase})
+    return cursor.fetchall()

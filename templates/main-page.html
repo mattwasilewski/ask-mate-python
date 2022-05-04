@@ -2,9 +2,9 @@
 {% block title %} AskMate {% endblock %}
 {% block content %}
     {{ super() }}
-    <form action="/">
-        <label for="search"></label>
-        <input type="text" id="search" placeholder="Search">
+    <form action="{{ url_for('search_questions') }}">
+        <label for="search-input"></label>
+        <input type="text" id="search-input" name="q" placeholder="Search">
         <button type="submit">Search</button>
     </form>
 {% endblock %}

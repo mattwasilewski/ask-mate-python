@@ -199,10 +199,14 @@ def decrease_answer_vote_number_count(cursor, answer_id):
 @database_common.connection_handler
 def get_questions_by_searching_phrase(cursor, searching_phrase):
     query = """
-        SELECT title, message, submission_time, view_number, vote_number
-        FROM question
-        WHERE title  LIKE '%%' || %(phrase)s || '%%' 
-        OR message LIKE '%%' || %(phrase)s  || '%%'
+        SELECT DISTINCT question.id , title, question.message as q_message, 
+        question.submission_time as q_submission_time, 
+        view_number, question.vote_number as q_vote_number, answer.message as a_message
+        FROM question 
+        FULL JOIN answer on question.id = answer.question_id 
+        WHERE question.title  LIKE '%%' || %(phrase)s || '%%' 
+        OR question.message LIKE '%%' || %(phrase)s  || '%%'
+        OR answer.message LIKE '%%' || %(phrase)s  || '%%'
         """
     cursor.execute(query, {'phrase': searching_phrase})
     return cursor.fetchall()

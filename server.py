@@ -28,7 +28,7 @@ def route_list():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    comments_to_answer = data_manager.get_comment_to_answer(answer_id)
+    comments_to_answer = data_manager.get_comments_to_answers(question_id)
     comments_to_question = data_manager.get_comment_to_question(question_id)
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_id(question_id)
@@ -112,7 +112,7 @@ def add_comment_to_question(question_id):
     return render_template('question_comment.html')
 
 
-@app.route("/question/<question_id>/new-comment", methods=['GET', 'POST'])
+@app.route("/answer/<answer_id>/new-comment", methods=['GET', 'POST'])
 def add_comment_to_answer(answer_id):
     if request.method == 'POST':
         message = request.form.get('message')

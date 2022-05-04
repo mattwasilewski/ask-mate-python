@@ -83,12 +83,12 @@ def get_answers_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def get_comment_to_answer(cursor, answer_id):
+def get_comments_to_answers(cursor, question_id):
     query = """
         SELECT message, submission_time, edited_count
         FROM comment
-        WHERE answer_id = %s """
-    cursor.execute(query, (answer_id,))
+        WHERE question_id = %s """
+    cursor.execute(query, (question_id,))
     return cursor.fetchall()
 
 

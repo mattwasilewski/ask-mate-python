@@ -8,9 +8,9 @@ load_dotenv()
 app = Flask(__name__)
 
 
-'''@app.route("/")
+@app.route("/")
 def main_page():
-    return render_template('main-page.html')'''
+    return render_template('main-page.html')
 
 
 @app.route("/search")
@@ -18,7 +18,6 @@ def search_questions():
     searching_phrase = request.args.get('q')
     questions = data_manager.get_questions_by_searching_phrase(searching_phrase)
     # data_manager.get_answers_by_searching_phrase(searching_phrase)
-
     return render_template('search-questions.html', searching_phrase=searching_phrase, questions=questions)
 
 
@@ -31,7 +30,7 @@ def add_question():
     return render_template('add-question.html')
 
 
-@app.route("/")
+@app.route("/list")
 def route_list():
     query_parameters = request.args
     sort_method = query_parameters.get('order_by')

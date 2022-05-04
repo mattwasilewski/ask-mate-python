@@ -82,6 +82,16 @@ def get_answers_by_id(cursor, question_id):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def get_comment_to_question(cursor, question_id):
+    query = """
+        SELECT message, submission_time, edited_count
+        FROM comment
+        WHERE question_id = %s """
+    cursor.execute(query, (question_id,))
+    return cursor.fetchall()
+
+
 def set_question_data(title, message):
     submission_time = get_current_time()
     view_number = '0'
@@ -98,6 +108,17 @@ def add_question_to_database(cursor, submission_time, view_number, vote_number, 
     """
     cursor.execute(query, {'time': submission_time, 'view_n': view_number, 'vote_n': vote_number,
                            'title': title, 'message': message, 'image': image})
+
+
+@database_common.connection_handler
+def add_comment_to_question(cursor, question_id, message, submission_time, edited_count):
+    query = """
+        INSERT INTO comment (question_id,  message, submission_time, edited_count)
+        VALUES (%(question_id)s, %(message)s, %(submission_time)s, %(edited_count)s)
+        """
+    cursor.execute(query, {'question_id': int(question_id), 'message': message, 'submission_time': submission_time,
+                           'edited_count': edited_count})
+
 
 
 @database_common.connection_handler

@@ -17,7 +17,7 @@ def add_question():
     return render_template('add-question.html')
 
 
-@app.route("/list")
+@app.route("/")
 def route_list():
     query_parameters = request.args
     sort_method = query_parameters.get('order_by')
@@ -28,10 +28,11 @@ def route_list():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
+    comments = data_manager.get_comment_to_question(question_id)
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_id(question_id)
     return render_template('question.html', answers=answers, question=question,
-                           question_id=question_id)
+                           question_id=question_id, comments=comments)
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
@@ -95,6 +96,18 @@ def answer_vote_down(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
     data_manager.decrease_answer_vote_number_count(answer_id)
     return redirect(url_for('display_question', question_id=question_id))
+
+
+@app.route("/question/<question_id>/new-comment", methods=['GET', 'POST'])
+def add_comment_to_question(question_id):
+    #id, message, submission_time, edited_count
+    if request.method == 'POST':
+        message = request.form.get('message')
+        submission_time = data_manager.get_current_time()
+        edited_count = 0
+        data_manager.add_comment_to_question(question_id, message, submission_time, edited_count)
+        return redirect(url_for('display_question', question_id=question_id))
+    return render_template('question_comment.html')
 
 
 if __name__ == "__main__":

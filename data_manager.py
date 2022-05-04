@@ -76,7 +76,8 @@ def get_answers_by_id(cursor, question_id):
     query = """
         SELECT id, message, submission_time, vote_number, image
         FROM answer
-        WHERE question_id = %s"""
+        WHERE question_id = %s
+        ORDER BY vote_number desc"""
     cursor.execute(query, (question_id,))
     return cursor.fetchall()
 

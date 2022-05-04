@@ -201,12 +201,18 @@ def get_questions_by_searching_phrase(cursor, searching_phrase):
     query = """
         SELECT DISTINCT question.id , title, question.message as q_message, 
         question.submission_time as q_submission_time, 
-        view_number, question.vote_number as q_vote_number, answer.message as a_message
+        view_number, question.vote_number as q_vote_number
         FROM question 
         FULL JOIN answer on question.id = answer.question_id 
         WHERE question.title  LIKE '%%' || %(phrase)s || '%%' 
         OR question.message LIKE '%%' || %(phrase)s  || '%%'
         OR answer.message LIKE '%%' || %(phrase)s  || '%%'
+        GROUP BY question.id
         """
     cursor.execute(query, {'phrase': searching_phrase})
     return cursor.fetchall()
+
+#todo jak uzyskac dostep do answer.message
+
+#todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy
+# todo pogrupowac tak by moglo być tylko jedno takie samo question id

@@ -58,9 +58,7 @@
         <form action="{{ url_for('answer_vote_down', answer_id=answer.id) }}" method="post">
             <button type="submit">Vote down</button>
         </form>
-        <form action="{{ "/answer/" + answer['id']|string + "/new-comment" }}">
-            <button type="submit">Add comment</button>
-        </form>
+        <button><a href="{{ url_for('add_comment_to_answer', answer_id=answer.id) }}">Add comment</a></button>
     </div>
         {{ answer.vote_number }} votes
         <br>

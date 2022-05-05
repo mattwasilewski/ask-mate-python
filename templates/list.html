@@ -18,7 +18,8 @@
         </select>
         <button type="submit">Sort</button>
     </form>
-    <div>
+
+    <div class = question-list>
         {% for question in questions %}
             <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>
                 <br><br>
@@ -39,6 +40,7 @@
         {% endfor %}
     <button><a href="{{ url_for('add_question') }}">Add a question</a></button>
     </div>
+
     <div>
         <a href="{{ url_for('main_page') }}">Back to main page</a>
     </div>

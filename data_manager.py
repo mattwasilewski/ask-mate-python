@@ -76,6 +76,16 @@ def get_question_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
+def get_answer_message_by_id(cursor, answer_id):
+    query = """
+        SELECT message
+        FROM answer
+        WHERE id = %s"""
+    cursor.execute(query, (answer_id,))
+    return cursor.fetchone()
+
+
+@database_common.connection_handler
 def get_last_question(cursor):
     query = """
         SELECT * FROM question 
@@ -272,6 +282,17 @@ def add_comment_to_answer(cursor, answer_id, message, submission_time, edited_co
         """
     cursor.execute(query, {'answer_id': int(answer_id), 'message': message, 'submission_time': submission_time,
                            'edited_count': edited_count})
+
+
+@database_common.connection_handler
+def edit_answer(cursor, answer_id, message):
+    query = """
+        UPDATE answer 
+        SET message = %(new_message)s
+        WHERE id = %(id)s
+        """
+    cursor.execute(query, {'new_message': message, 'id': answer_id})
+
 
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy

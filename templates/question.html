@@ -46,6 +46,11 @@
             {% if answer.image != None %}
             <img src="{{'/' + answer.image }}" alt="answer-image"/>
             {% endif %}
+
+            <form action="{{ "/answer/" + answer['id']|string + "/edit" }}">
+                <button type="submit">Edit</button>
+            </form>
+
             <form action="{{ url_for('delete_answer', answer_id=answer.id) }}" method="post">
                 <button type="submit">Delete</button>
             </form>

@@ -250,6 +250,21 @@ def get_all_comments(cursor):
 
 
 @database_common.connection_handler
+def get_answers_id_by_question_id(cursor, question_id):
+    query = """
+        SELECT id FROM answer WHERE question_id = %s"""
+    cursor.execute(query, (question_id,))
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def delete_comment_by_answer_id(cursor, answer_id):
+    query = """
+        DELETE FROM comment WHERE answer_id = %s"""
+    cursor.execute(query, (answer_id,))
+
+
+@database_common.connection_handler
 def add_comment_to_answer(cursor, answer_id, message, submission_time, edited_count):
     query = """
         INSERT INTO comment (answer_id,  message, submission_time, edited_count)

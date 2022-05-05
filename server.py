@@ -29,11 +29,10 @@ def route_list():
 @app.route("/question/<question_id>")
 def display_question(question_id):
     comments = data_manager.get_all_comments()
-    comments_to_question = data_manager.get_comment_to_question(question_id)
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_id(question_id)
     return render_template('question.html', answers=answers, question=question,
-                           question_id=question_id, comments_to_question=comments_to_question, comments=comments
+                           question_id=question_id, comments=comments
                            )
 
 

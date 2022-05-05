@@ -91,17 +91,6 @@ def get_all_comments(cursor):
     return cursor.fetchall()
 
 
-
-@database_common.connection_handler
-def get_comment_to_question(cursor, question_id):
-    query = """
-        SELECT message, submission_time, edited_count
-        FROM comment
-        WHERE question_id = %s """
-    cursor.execute(query, (question_id,))
-    return cursor.fetchall()
-
-
 def set_question_data(title, message):
     submission_time = get_current_time()
     view_number = '0'

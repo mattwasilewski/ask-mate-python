@@ -23,3 +23,11 @@ def sort_questions_by(sort_method, function):
         case 'votes':
             return function('vote_number')
 
+
+def handle_deleting_question(question_id):
+    answers = data_manager.get_answers_id_by_question_id(question_id)
+    for answer_id in answers:
+        data_manager.delete_comment_by_answer_id(answer_id['id'])
+    data_manager.delete_comment_by_question_id(question_id)
+    data_manager.delete_answer_by_question_id(question_id)
+    data_manager.delete_question(question_id)

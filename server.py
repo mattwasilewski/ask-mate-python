@@ -75,10 +75,7 @@ def edit_question(question_id):
 
 @app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
-    #todo delete comments by answer id if added
-    data_manager.delete_comment_by_question_id(question_id)
-    data_manager.delete_answer_by_question_id(question_id)
-    data_manager.delete_question(question_id)
+    util.handle_deleting_question(question_id)
     return redirect(url_for('route_list'))
 
 

@@ -20,15 +20,15 @@ def save_image_path(file, message, question_id=None, title=None):
 
 def set_answer_data(message, filename, question_id):
     submission_time = get_current_time()
-    vote_number = '0'
+    vote_number = 0
     image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
     add_answer(submission_time, vote_number, question_id, message, image)
 
 
 def set_question_data(title, message, filename):
     submission_time = get_current_time()
-    view_number = '0'
-    vote_number = '0'
+    view_number = 0
+    vote_number = 0
     image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
     add_question_to_database(submission_time, view_number, vote_number, title, message, image)
 
@@ -104,16 +104,6 @@ def get_answers_by_id(cursor, question_id):
         ORDER BY vote_number desc"""
     cursor.execute(query, (question_id,))
     return cursor.fetchall()
-
-
-# @database_common.connection_handler
-# def get_comment_to_question(cursor, question_id):
-#     query = """
-#         SELECT message, submission_time, edited_count
-#         FROM comment
-#         WHERE question_id = %s """
-#     cursor.execute(query, (question_id,))
-#     return cursor.fetchall()
 
 
 @database_common.connection_handler

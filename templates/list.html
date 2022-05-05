@@ -18,7 +18,6 @@
         </select>
         <button type="submit">Sort</button>
     </form>
-
     <div class = question-list>
         {% for question in questions %}
             <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>

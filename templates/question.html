@@ -70,11 +70,11 @@
         <table>
 
 
-        <tr><th><b>Comments to answer:</b></th></tr>
+
         {% for comment in comments %}
 
         {% if comment['answer_id'] == answer['id'] %}
-
+                <tr><th><b>Comment </b></th></tr>
                 <tr><td>Message:<br>{{ comment.message }}</td></tr>
                 <tr><td>Submission time:<br>{{ comment.submission_time }}</td></tr>
                 <tr><td>Edited times:<br>{{ comment.edited_count }}</td></tr>

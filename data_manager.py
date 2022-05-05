@@ -14,22 +14,27 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 
-def save_image_path(file, message, question_id):
+def save_image_path(file, message, question_id=None, title=None):
     filename = ''
     if file.filename != '' and file and allowed_file(file.filename, ALLOWED_EXTENSIONS):
         filename = secure_filename(file.filename)
         file.save(os.path.join(BASE_PATH + UPLOAD_FOLDER, filename))
-    set_image_data(message, filename, question_id)
+    set_answer_data(message, filename, question_id) if title is None else set_question_data(title, message, filename)
 
 
-def set_image_data(message, filename, question_id):
+def set_answer_data(message, filename, question_id):
     submission_time = get_current_time()
     vote_number = '0'
-    if filename != '':
-        image = UPLOAD_FOLDER + '/' + filename
-    else:
-        image = None
+    image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
     add_answer(submission_time, vote_number, question_id, message, image)
+
+
+def set_question_data(title, message, filename):
+    submission_time = get_current_time()
+    view_number = '0'
+    vote_number = '0'
+    image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
+    add_question_to_database(submission_time, view_number, vote_number, title, message, image)
 
 
 @database_common.connection_handler
@@ -92,14 +97,6 @@ def get_comment_to_question(cursor, question_id):
     return cursor.fetchall()
 
 
-def set_question_data(title, message):
-    submission_time = get_current_time()
-    view_number = '0'
-    vote_number = '0'
-    image = None
-    add_question_to_database(submission_time, view_number, vote_number, title, message, image)
-
-
 @database_common.connection_handler
 def add_question_to_database(cursor, submission_time, view_number, vote_number, title, message, image):
     query = """
@@ -118,7 +115,6 @@ def add_comment_to_question(cursor, question_id, message, submission_time, edite
         """
     cursor.execute(query, {'question_id': int(question_id), 'message': message, 'submission_time': submission_time,
                            'edited_count': edited_count})
-
 
 
 @database_common.connection_handler
@@ -235,4 +231,4 @@ def get_questions_by_searching_phrase(cursor, searching_phrase):
 
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy
-# todo pogrupowac tak by moglo być tylko jedno takie samo question id
+#todo pogrupowac tak by moglo być tylko jedno takie samo question id

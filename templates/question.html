@@ -12,14 +12,15 @@
         <p>{{ question.view_number }} views {{ question.vote_number }} votes
             <br><br>
             {{ question.message }}
+            <br>
             {% if question.image != None %}
-            <img src="{{'/static/' + question.image }}" alt="question_image">
+            <img src="{{'/' + question.image }}" alt="question_image">
             {% endif %}
             <br><br>
             <small>Posted on: {{ question.submission_time }}</small>
             <br>
         </p>
-    <p>
+    <div class="comments">
 
         <table>
 
@@ -33,7 +34,7 @@
             {% endfor %}
 
         </table>
-    </p>
+    </div>
         <h3>Answers:</h3>
         {% for answer in answers %}
 

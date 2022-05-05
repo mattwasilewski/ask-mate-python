@@ -10,7 +10,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def main_page():
-    return render_template('main-page.html')
+    questions = data_manager.get_five_latest_questions()
+    return render_template('main-page.html', questions=questions)
 
 
 @app.route("/search")

@@ -8,4 +8,27 @@
         <button type="submit">Search</button>
     </form>
     <a href="{{ url_for('route_list') }}">Questions</a>
+
+    <div class="question-list">
+        {% for question in questions %}
+            <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>
+                <br><br>
+                {{ question.message }}
+                <br><br>
+            <form action="{{ url_for('question_vote_up', question_id = question.id) }}" method="post">
+                <button type="submit">Vote up</button>
+            </form>
+            <form action="{{ url_for('question_vote_down', question_id = question.id)}}" method="post">
+                <button type="submit">Vote down</button>
+            </form>
+                <br>
+                <br>
+                {{ question.view_number }} views {{ question.vote_number }} votes
+                <br>
+                <small>Posted on: {{ question.submission_time }}</small>
+            </div>
+        {% endfor %}
+    <button><a href="{{ url_for('add_question') }}">Add a question</a></button>
+    </div>
+
 {% endblock %}

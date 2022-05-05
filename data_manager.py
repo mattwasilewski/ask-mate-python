@@ -42,7 +42,7 @@ def get_questions_desc(cursor, sort_method):
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
-        ORDER BY {col} desc""")
+        ORDER BY {col} DESC""")
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
 
@@ -52,7 +52,7 @@ def get_questions_asc(cursor, sort_method):
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
-        ORDER BY {col} asc""")
+        ORDER BY {col} ASC""")
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
 
@@ -74,6 +74,17 @@ def get_last_question(cursor):
         WHERE id = (SELECT max(id) FROM question)"""
     cursor.execute(query)
     return cursor.fetchone()
+
+
+@database_common.connection_handler
+def get_five_latest_questions(cursor):
+    query = """
+        SELECT * FROM question
+        ORDER BY id desc
+        LIMIT 5
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 @database_common.connection_handler

@@ -106,7 +106,7 @@ def answer_vote_up(answer_id):
     return redirect(url_for('display_question', question_id=question_id))
 
 
-@app.route("/question/<answer_id>/vote-down", methods=['POST'])
+@app.route("/answer/<answer_id>/vote-down", methods=['POST'])
 def answer_vote_down(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
     data_manager.decrease_answer_vote_number_count(answer_id)

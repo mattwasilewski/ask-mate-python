@@ -17,14 +17,15 @@ def main_page():
 def search_questions():
     searching_phrase = request.args.get('q')
     questions = data_manager.get_questions_by_searching_phrase(searching_phrase)
-    # data_manager.get_answers_by_searching_phrase(searching_phrase)
     return render_template('search-questions.html', searching_phrase=searching_phrase, questions=questions)
 
 
 @app.route("/add-question", methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        data_manager.set_question_data(request.form['title'], request.form['message'])
+        if 'question-image' in request.files:
+            data_manager.save_image_path(request.files['question-image'], request.form.get('message'), None,
+                                         request.form.get('title'))
         question_id = data_manager.get_last_question()['id']
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('add-question.html')

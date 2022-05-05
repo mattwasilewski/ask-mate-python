@@ -20,7 +20,7 @@
             <small>Posted on: {{ question.submission_time }}</small>
             <br>
         </p>
-    <div class="comments">
+    <div class="question-comments">
 
         <table>
 
@@ -66,15 +66,15 @@
             <small>Posted on: {{ answer.submission_time }}</small>
             <br><br>
 
-
+        <div class="answer-comments">
         <table>
 
 
-
+        <tr><th><b>Comments to answer:</b></th></tr>
         {% for comment in comments %}
 
         {% if comment['answer_id'] == answer['id'] %}
-            <tr><th><b>Comments to answer:</b></th></tr>
+
                 <tr><td>Message:<br>{{ comment.message }}</td></tr>
                 <tr><td>Submission time:<br>{{ comment.submission_time }}</td></tr>
                 <tr><td>Edited times:<br>{{ comment.edited_count }}</td></tr>
@@ -83,7 +83,7 @@
         {% endfor %}
 
         </table>
-
+        </div>
 
         {#todo w przypadku edycji dodac edited on + posted on#}
         </div>

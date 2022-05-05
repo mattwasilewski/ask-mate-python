@@ -5,10 +5,6 @@ import database_common
 from werkzeug.utils import secure_filename
 
 
-QUESTION_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/question.csv'
-ANSWER_DATA_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'sample_data/answer.csv'
-QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
-ANSWER_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 UPLOAD_FOLDER = 'static/images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/'
@@ -35,6 +31,18 @@ def set_question_data(title, message, filename):
     vote_number = '0'
     image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
     add_question_to_database(submission_time, view_number, vote_number, title, message, image)
+
+
+def get_current_time():
+    current_time = int(datetime.now().replace(tzinfo=timezone.utc).timestamp())
+    value = datetime.utcfromtimestamp(current_time)
+    date_format = f"{value:%Y-%m-%d %H:%M:%S}"
+    return date_format
+
+
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 @database_common.connection_handler
@@ -98,14 +106,14 @@ def get_answers_by_id(cursor, question_id):
     return cursor.fetchall()
 
 
-@database_common.connection_handler
-def get_comment_to_question(cursor, question_id):
-    query = """
-        SELECT message, submission_time, edited_count
-        FROM comment
-        WHERE question_id = %s """
-    cursor.execute(query, (question_id,))
-    return cursor.fetchall()
+# @database_common.connection_handler
+# def get_comment_to_question(cursor, question_id):
+#     query = """
+#         SELECT message, submission_time, edited_count
+#         FROM comment
+#         WHERE question_id = %s """
+#     cursor.execute(query, (question_id,))
+#     return cursor.fetchall()
 
 
 @database_common.connection_handler
@@ -136,18 +144,6 @@ def edit_question(cursor, question_id, title, message):
         WHERE id = %(id)s
         """
     cursor.execute(query, {'new_title': title, 'new_message': message, 'id': question_id})
-
-
-def get_current_time():
-    current_time = int(datetime.now().replace(tzinfo=timezone.utc).timestamp())
-    value = datetime.utcfromtimestamp(current_time)
-    date_format = f"{value:%Y-%m-%d %H:%M:%S}"
-    return date_format
-
-
-def allowed_file(filename, allowed_extensions):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 @database_common.connection_handler
@@ -253,6 +249,24 @@ def get_questions_by_searching_phrase(cursor, searching_phrase):
     cursor.execute(query, {'phrase': searching_phrase})
     return cursor.fetchall()
 
+
+@database_common.connection_handler
+def get_all_comments(cursor):
+    query = """
+        SELECT * FROM comment
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def add_comment_to_answer(cursor, answer_id, message, submission_time, edited_count):
+    query = """
+        INSERT INTO comment (answer_id,  message, submission_time, edited_count)
+        VALUES (%(answer_id)s, %(message)s, %(submission_time)s, %(edited_count)s)
+        """
+    cursor.execute(query, {'answer_id': int(answer_id), 'message': message, 'submission_time': submission_time,
+                           'edited_count': edited_count})
 
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy

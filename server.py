@@ -8,16 +8,31 @@ load_dotenv()
 app = Flask(__name__)
 
 
+@app.route("/")
+def main_page():
+    questions = data_manager.get_five_latest_questions()
+    return render_template('main-page.html', questions=questions)
+
+
+@app.route("/search")
+def search_questions():
+    searching_phrase = request.args.get('q')
+    questions = data_manager.get_questions_by_searching_phrase(searching_phrase)
+    return render_template('search-questions.html', searching_phrase=searching_phrase, questions=questions)
+
+
 @app.route("/add-question", methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        data_manager.set_question_data(request.form['title'], request.form['message'])
+        if 'question-image' in request.files:
+            data_manager.save_image_path(request.files['question-image'], request.form.get('message'), None,
+                                         request.form.get('title'))
         question_id = data_manager.get_last_question()['id']
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('add-question.html')
 
 
-@app.route("/")
+@app.route("/list")
 def route_list():
     query_parameters = request.args
     sort_method = query_parameters.get('order_by')
@@ -61,6 +76,9 @@ def edit_question(question_id):
 
 @app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
+    #todo delete comments by answer id if added
+    data_manager.delete_comment_by_question_id(question_id)
+    data_manager.delete_answer_by_question_id(question_id)
     data_manager.delete_question(question_id)
     return redirect(url_for('route_list'))
 

@@ -14,22 +14,27 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 
-def save_image_path(file, message, question_id):
+def save_image_path(file, message, question_id=None, title=None):
     filename = ''
     if file.filename != '' and file and allowed_file(file.filename, ALLOWED_EXTENSIONS):
         filename = secure_filename(file.filename)
         file.save(os.path.join(BASE_PATH + UPLOAD_FOLDER, filename))
-    set_image_data(message, filename, question_id)
+    set_answer_data(message, filename, question_id) if title is None else set_question_data(title, message, filename)
 
 
-def set_image_data(message, filename, question_id):
+def set_answer_data(message, filename, question_id):
     submission_time = get_current_time()
     vote_number = '0'
-    if filename != '':
-        image = UPLOAD_FOLDER + '/' + filename
-    else:
-        image = None
+    image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
     add_answer(submission_time, vote_number, question_id, message, image)
+
+
+def set_question_data(title, message, filename):
+    submission_time = get_current_time()
+    view_number = '0'
+    vote_number = '0'
+    image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
+    add_question_to_database(submission_time, view_number, vote_number, title, message, image)
 
 
 @database_common.connection_handler
@@ -37,7 +42,7 @@ def get_questions_desc(cursor, sort_method):
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
-        ORDER BY {col} desc""")
+        ORDER BY {col} DESC""")
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
 
@@ -47,7 +52,7 @@ def get_questions_asc(cursor, sort_method):
     query = ("""
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
-        ORDER BY {col} asc""")
+        ORDER BY {col} ASC""")
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
 
@@ -72,6 +77,17 @@ def get_last_question(cursor):
 
 
 @database_common.connection_handler
+def get_five_latest_questions(cursor):
+    query = """
+        SELECT * FROM question
+        ORDER BY id desc
+        LIMIT 5
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
 def get_answers_by_id(cursor, question_id):
     query = """
         SELECT id, message, submission_time, vote_number, image
@@ -83,20 +99,13 @@ def get_answers_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def get_all_comments(cursor):
+def get_comment_to_question(cursor, question_id):
     query = """
-        SELECT * FROM comment
-        """
-    cursor.execute(query)
+        SELECT message, submission_time, edited_count
+        FROM comment
+        WHERE question_id = %s """
+    cursor.execute(query, (question_id,))
     return cursor.fetchall()
-
-
-def set_question_data(title, message):
-    submission_time = get_current_time()
-    view_number = '0'
-    vote_number = '0'
-    image = None
-    add_question_to_database(submission_time, view_number, vote_number, title, message, image)
 
 
 @database_common.connection_handler
@@ -117,17 +126,6 @@ def add_comment_to_question(cursor, question_id, message, submission_time, edite
         """
     cursor.execute(query, {'question_id': int(question_id), 'message': message, 'submission_time': submission_time,
                            'edited_count': edited_count})
-
-
-@database_common.connection_handler
-def add_comment_to_answer(cursor, answer_id, message, submission_time, edited_count):
-    query = """
-        INSERT INTO comment (answer_id,  message, submission_time, edited_count)
-        VALUES (%(answer_id)s, %(message)s, %(submission_time)s, %(edited_count)s)
-        """
-    cursor.execute(query, {'answer_id': int(answer_id), 'message': message, 'submission_time': submission_time,
-                           'edited_count': edited_count})
-
 
 
 @database_common.connection_handler
@@ -191,11 +189,25 @@ def delete_answer(cursor, answer_id):
 
 
 @database_common.connection_handler
+def delete_answer_by_question_id(cursor, question_id):
+    query = """
+        DELETE FROM answer WHERE question_id = %s"""
+    cursor.execute(query, (question_id,))
+
+
+@database_common.connection_handler
+def delete_comment_by_question_id(cursor, question_id):
+    query = """
+        DELETE FROM comment WHERE question_id = %s"""
+    cursor.execute(query, (question_id,))
+
+
+@database_common.connection_handler
 def increase_question_vote_number_count(cursor, question_id):
     query = """
         UPDATE question
         SET vote_number = vote_number + 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (question_id,))
 
 
@@ -204,7 +216,7 @@ def decrease_question_vote_number_count(cursor, question_id):
     query = """
         UPDATE question
         SET vote_number = vote_number - 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (question_id,))
 
 
@@ -213,7 +225,7 @@ def increase_answer_vote_number_count(cursor, answer_id):
     query = """
         UPDATE answer
         SET vote_number = vote_number + 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (answer_id,))
 
 
@@ -222,5 +234,26 @@ def decrease_answer_vote_number_count(cursor, answer_id):
     query = """
         UPDATE answer
         SET vote_number = vote_number - 1
-        WHERE id = %s """
+        WHERE id = %s"""
     cursor.execute(query, (answer_id,))
+
+
+@database_common.connection_handler
+def get_questions_by_searching_phrase(cursor, searching_phrase):
+    query = """
+        SELECT DISTINCT ON (question.id) question.id , title, question.message as q_message, 
+        question.submission_time as q_submission_time, 
+        view_number, question.vote_number as q_vote_number, answer.message
+        FROM question 
+        FULL JOIN answer on question.id = answer.question_id 
+        WHERE question.title  LIKE '%%' || %(phrase)s || '%%' 
+        OR question.message LIKE '%%' || %(phrase)s  || '%%'
+        OR answer.message LIKE '%%' || %(phrase)s  || '%%'
+        """
+    cursor.execute(query, {'phrase': searching_phrase})
+    return cursor.fetchall()
+
+
+#todo jak uzyskac dostep do answer.message
+#todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy
+#todo pogrupowac tak by moglo być tylko jedno takie samo question id

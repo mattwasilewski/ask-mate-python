@@ -24,13 +24,15 @@
 
         <table>
 
-        <tr><th><b>Comments:</b></th></tr>
+        <tr><th><b>Comments to question:</b></th></tr>
 
             {% for comment in comments %}
+                {% if comment['question_id'] == question_id|int %}
                 <tr><td>Message:<br>{{ comment.message }}</td></tr>
                 <tr><td>Submission time:<br>{{ comment.submission_time }}</td></tr>
                 <tr><td>Edited times:<br>{{ comment.edited_count }}</td></tr>
                 <tr><td>------------------------------------------</td></tr>
+                {% endif %}
             {% endfor %}
 
         </table>
@@ -55,14 +57,40 @@
             <form action="{{ url_for('answer_vote_down', answer_id=answer.id) }}" method="post">
                 <button type="submit">Vote down</button>
             </form>
+        <form action="{{ "/answer/" + answer['id']|string + "/new-comment" }}">
+            <button type="submit">Add comment</button>
+
+        </form>
             {{ answer.vote_number }} votes
             <br>
             <small>Posted on: {{ answer.submission_time }}</small>
             <br><br>
+
+
+        <table>
+
+        <tr><th><b>Comments to answer:</b></th></tr>
+
+        {% for comment in comments %}
+        {% if comment['answer_id'] == answer['id'] %}
+                <tr><td>Message:<br>{{ comment.message }}</td></tr>
+                <tr><td>Submission time:<br>{{ comment.submission_time }}</td></tr>
+                <tr><td>Edited times:<br>{{ comment.edited_count }}</td></tr>
+                <tr><td>------------------------------------------</td></tr>
+        {% endif %}
+        {% endfor %}
+
+        </table>
+
+
         {#todo w przypadku edycji dodac edited on + posted on#}
         </div>
 
         {% endfor %}
+
+
+
+
 
         <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
         <button><a href="{{ url_for('route_list') }}">Go back</a></button>

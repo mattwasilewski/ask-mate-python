@@ -43,11 +43,12 @@ def route_list():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    comments = data_manager.get_comment_to_question(question_id)
+    comments = data_manager.get_all_comments()
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_id(question_id)
     return render_template('question.html', answers=answers, question=question,
-                           question_id=question_id, comments=comments)
+                           question_id=question_id, comments=comments
+                           )
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
@@ -126,6 +127,18 @@ def add_comment_to_question(question_id):
         data_manager.add_comment_to_question(question_id, message, submission_time, edited_count)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('question_comment.html')
+
+
+@app.route("/answer/<answer_id>/new-comment", methods=['GET', 'POST'])
+def add_comment_to_answer(answer_id):
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    if request.method == 'POST':
+        message = request.form.get('message')
+        submission_time = data_manager.get_current_time()
+        edited_count = 0
+        data_manager.add_comment_to_answer(answer_id, message, submission_time, edited_count)
+        return redirect(url_for('display_question', question_id=question_id))
+    return render_template('answer_comment.html', answer_id=answer_id)
 
 
 if __name__ == "__main__":

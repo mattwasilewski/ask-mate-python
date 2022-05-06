@@ -34,9 +34,8 @@ def add_question():
 
 @app.route("/list")
 def route_list():
-    query_parameters = request.args
-    sort_method = query_parameters.get('order_by')
-    order = query_parameters.get('order_direction')
+    sort_method = request.args.get('order_by')
+    order = request.args.get('order_direction')
     question = util.get_sorted_questions(sort_method, order)
     return render_template('list.html', questions=question)
 

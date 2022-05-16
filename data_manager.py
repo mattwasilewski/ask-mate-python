@@ -243,9 +243,9 @@ def get_questions_by_searching_phrase(cursor, searching_phrase):
         view_number, question.vote_number as q_vote_number, answer.message
         FROM question 
         FULL JOIN answer on question.id = answer.question_id 
-        WHERE question.title  LIKE '%%' || %(phrase)s || '%%' 
-        OR question.message LIKE '%%' || %(phrase)s  || '%%'
-        OR answer.message LIKE '%%' || %(phrase)s  || '%%'
+        WHERE question.title  ILIKE '%%' || %(phrase)s || '%%' 
+        OR question.message ILIKE '%%' || %(phrase)s  || '%%'
+        OR answer.message ILIKE '%%' || %(phrase)s  || '%%'
         """
     cursor.execute(query, {'phrase': searching_phrase})
     return cursor.fetchall()

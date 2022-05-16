@@ -295,6 +295,17 @@ def edit_answer(cursor, answer_id, message):
     cursor.execute(query, {'new_message': message, 'id': answer_id})
 
 
+@database_common.connection_handler
+def get_user_data_by_username(cursor, username):
+    query = """
+        SELECT username, password, registration_date FROM users
+        WHERE username = %s
+        """
+    cursor.execute(query, (username,))
+    return cursor.fetchone()
+
+
+
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy
 #todo pogrupowac tak by moglo być tylko jedno takie samo question id

@@ -61,6 +61,20 @@ CREATE TABLE tag (
 );
 
 
+/* dodane */
+DROP TABLE IF EXISTS public.users;
+CREATE TABLE users (
+    id serial NOT NULL,
+    username text,
+    password text,
+    registration_date timestamp without time zone
+);
+
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_users_id PRIMARY KEY (id);
+
+
 ALTER TABLE ONLY answer
     ADD CONSTRAINT pk_answer_id PRIMARY KEY (id);
 
@@ -121,3 +135,5 @@ SELECT pg_catalog.setval('tag_id_seq', 3, true);
 INSERT INTO question_tag VALUES (0, 1);
 INSERT INTO question_tag VALUES (1, 3);
 INSERT INTO question_tag VALUES (2, 3);
+
+INSERT INTO users VALUES (1, 'admin', '$2b$12$c/guZ7rAuMVF9zDpjSat0ea7itUREMFa4DpLn5OXdicwIvO.cjL4i', '2022-04-25 14:42:00')

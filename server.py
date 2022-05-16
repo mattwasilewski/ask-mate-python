@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 import data_manager
 import util
 from dotenv import load_dotenv
+from bonus_questions import SAMPLE_QUESTIONS
 
 
 load_dotenv()
@@ -145,6 +146,11 @@ def edit_answer(answer_id):
         data_manager.edit_answer(answer_id, request.form['message'])
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('edit-answer.html', answer=answer, answer_id=answer_id)
+
+
+@app.route("/bonus-questions")
+def main():
+    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
 if __name__ == "__main__":

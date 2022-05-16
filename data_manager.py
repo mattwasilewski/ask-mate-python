@@ -51,6 +51,7 @@ def get_questions_desc(cursor, sort_method):
         SELECT id, title, message, submission_time, view_number, vote_number
         FROM question
         ORDER BY {col} DESC""")
+        #todo zamienic na - query nizej tez ORDER BY {col} """ + 'DESC')
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
 
@@ -297,3 +298,5 @@ def edit_answer(cursor, answer_id, message):
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy
 #todo pogrupowac tak by moglo być tylko jedno takie samo question id
+
+#todo podzielic plik wzgledem tabelek

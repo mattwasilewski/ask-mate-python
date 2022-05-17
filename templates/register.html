@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{{ super() }}
 {% if error != None %}
 {{ error }}
 {% endif %}
@@ -13,7 +13,7 @@
         <input type="text" name="username" id="username" size="20" required>
             <br>
         <label for="password"><strong>Password:</strong></label><br>
-           <input type="text" name="password" id="password" size="50"><br><br>
+           <input type="password" name="password" id="password" size="50" required><br><br>
         <input type="submit" value="Submit">
         </form>
     </div>

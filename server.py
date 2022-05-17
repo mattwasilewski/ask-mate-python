@@ -199,7 +199,6 @@ def login_user():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    error = ""
     if request.method == 'POST':
         all_usernames = data_manager.get_all_usernames()
         username = request.form['username']
@@ -210,8 +209,8 @@ def register():
             data_manager.add_user_to_database(username, hashed_password, registration_date)
             return redirect(url_for('main_page'))
         else:
-            error = 'This username already exist'
-    return render_template('register.html', error=error)
+            flash('This username already exist.', 'danger')
+    return render_template('register.html')
 
 
 

@@ -24,12 +24,14 @@
                 <br><br>
                 {{ question.message }}
                 <br><br>
+            {% if username %}
             <form action="{{ url_for('question_vote_up', question_id = question.id) }}" method="post">
                 <button type="submit">Vote up</button>
             </form>
             <form action="{{ url_for('question_vote_down', question_id = question.id)}}" method="post">
                 <button type="submit">Vote down</button>
             </form>
+            {% endif %}
                 <br>
                 <br>
                 {{ question.view_number }} views {{ question.vote_number }} votes

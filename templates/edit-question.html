@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} Edit question | AskMate {% endblock %}
 {% block content %}
+    {{ super() }}
     <form action="{{ add_comment_to_answer }}" method="post" enctype="multipart/form-data">
         <label for="title">Edit title:</label>
         <br>

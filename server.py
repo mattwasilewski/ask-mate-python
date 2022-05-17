@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash
 import data_manager
 import util
 from dotenv import load_dotenv
@@ -160,14 +160,19 @@ def login_user():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
+    error = ""
     if request.method == 'POST':
+        all_usernames = data_manager.get_all_usernames()
         username = request.form['username']
         password = request.form['password']
         hashed_password = hash_password(password)
         registration_date = data_manager.get_current_time()
-        data_manager.add_user_to_database(username, hashed_password, registration_date)
-        return redirect(url_for('main_page'))
-    return render_template('register.html')
+        if not any(d['username'] == username for d in all_usernames):
+            data_manager.add_user_to_database(username, hashed_password, registration_date)
+            return redirect(url_for('main_page'))
+        else:
+            error = 'This username already exist'
+    return render_template('register.html', error=error)
 
 
 def hash_password(plain_text_password):
@@ -185,3 +190,6 @@ if __name__ == "__main__":
         host='0.0.0.0',
         port=8000,
         debug=True)
+
+
+#get all usernames/if input in usernames to chuj error=none

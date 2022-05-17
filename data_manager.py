@@ -304,6 +304,13 @@ def add_user_to_database(cursor, username, password, registration_date):
     cursor.execute(query, {'username': username, 'password': password, 'registration_date': registration_date})
 
 
+@database_common.connection_handler
+def get_all_usernames(cursor):
+    query = """
+        SELECT username FROM users
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy

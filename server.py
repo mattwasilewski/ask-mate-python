@@ -210,6 +210,9 @@ def register():
             return redirect(url_for('main_page'))
         else:
             flash('This username already exist.', 'danger')
+    elif session.get('username'):
+        flash("You can not access this page, you are already logged in.", 'warning')
+        return redirect(url_for('main_page'))
     return render_template('register.html')
 
 

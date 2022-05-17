@@ -27,7 +27,7 @@ def validate_login(username, password):
 @app.route("/")
 def main_page():
     questions = data_manager.get_five_latest_questions()
-    return render_template('main-page.html', questions=questions)
+    return render_template('main-page.html', questions=questions, username=session.get('username'))
 
 
 @app.route("/search")
@@ -45,7 +45,10 @@ def add_question():
                                          request.form.get('title'))
         question_id = data_manager.get_last_question()['id']
         return redirect(url_for('display_question', question_id=question_id))
-    return render_template('add-question.html')
+    elif not session.get('username'):
+        flash("You need to be logged in to access this page.", 'warning')
+        return redirect(url_for('main_page'))
+    return render_template('add-question.html', username=session.get('username'))
 
 
 @app.route("/list")
@@ -53,7 +56,7 @@ def route_list():
     sort_method = request.args.get('order_by')
     order = request.args.get('order_direction')
     question = util.get_sorted_questions(sort_method, order)
-    return render_template('list.html', questions=question)
+    return render_template('list.html', questions=question, username=session.get('username'))
 
 
 @app.route("/question/<question_id>")
@@ -62,7 +65,8 @@ def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_id(question_id)
     return render_template('question.html', answers=answers, question=question,
-                           question_id=question_id, comments=comments)
+                           question_id=question_id, comments=comments,
+                           username=session.get('username'))
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
@@ -71,6 +75,9 @@ def new_answer(question_id):
         if 'question-image' in request.files:
             data_manager.save_image_path(request.files['question-image'], request.form.get('message'), question_id)
         return redirect(url_for('display_question', question_id=question_id))
+    elif not session.get('username'):
+        flash("You need to be logged in to access this page.", 'warning')
+        return redirect(url_for('main_page'))
     return render_template('answer.html', question_id=question_id)
 
 
@@ -138,6 +145,9 @@ def add_comment_to_question(question_id):
         edited_count = 0
         data_manager.add_comment_to_question(question_id, message, submission_time, edited_count)
         return redirect(url_for('display_question', question_id=question_id))
+    elif not session.get('username'):
+        flash("You need to be logged in to access this page.", 'warning')
+        return redirect(url_for('main_page'))
     return render_template('question_comment.html')
 
 
@@ -150,6 +160,9 @@ def add_comment_to_answer(answer_id):
         edited_count = 0
         data_manager.add_comment_to_answer(answer_id, message, submission_time, edited_count)
         return redirect(url_for('display_question', question_id=question_id))
+    elif not session.get('username'):
+        flash("You need to be logged in to access this page.", 'warning')
+        return redirect(url_for('main_page'))
     return render_template('answer_comment.html', answer_id=answer_id)
 
 
@@ -172,7 +185,22 @@ def main():
 def login_user():
     if request.method == 'POST':
         return validate_login(request.form.get('username'), request.form.get('user-password'))
+    elif session.get('username'):
+        # session.pop('_flashes', None)
+        flash("You are already logged in.", 'warning')
+        return redirect(url_for('main_page'))
     return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    # session.pop('_flashes', None)
+    if not session.get('username'):
+        flash("You need to be logged in to access this page.", 'warning')
+        return redirect(url_for('main_page'))
+    session.pop('username', None)
+    flash("You have been logged out.", 'success')
+    return redirect(url_for('main_page'))
 
 
 if __name__ == "__main__":

@@ -46,8 +46,9 @@ def search_questions():
 def add_question():
     if request.method == 'POST':
         if 'question-image' in request.files:
-            data_manager.save_image_path(request.files['question-image'], request.form.get('message'), None,
-                                         request.form.get('title'))
+            userdata = data_manager.get_user_data_by_username(session['username'])
+            data_manager.save_image_path(request.files['question-image'], request.form.get('message'),
+                                         userdata['id'], None, request.form.get('title'))
         question_id = data_manager.get_last_question()['id']
         return redirect(url_for('display_question', question_id=question_id))
     elif not session.get('username'):
@@ -68,17 +69,20 @@ def route_list():
 def display_question(question_id):
     comments = data_manager.get_all_comments()
     question = data_manager.get_question_by_id(question_id)
+    question_author = data_manager.get_author_by_id(question['user_id'])
     answers = data_manager.get_answers_by_id(question_id)
     return render_template('question.html', answers=answers, question=question,
                            question_id=question_id, comments=comments,
-                           username=session.get('username'))
+                           username=session.get('username'), author=question_author['username'])
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
 def new_answer(question_id):
     if request.method == 'POST':
         if 'question-image' in request.files:
-            data_manager.save_image_path(request.files['question-image'], request.form.get('message'), question_id)
+            userdata = data_manager.get_user_data_by_username(session['username'])
+            data_manager.save_image_path(request.files['question-image'], request.form.get('message'),
+                                         userdata['id'], question_id)
         return redirect(url_for('display_question', question_id=question_id))
     elif not session.get('username'):
         flash("You need to be logged in to access this page.", 'warning')

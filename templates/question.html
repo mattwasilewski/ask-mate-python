@@ -1,4 +1,5 @@
 {% extends 'base.html' %} {% block content %}
+    {{ super() }}
 <div id="question-page">
     <h2>
         {{ question.title }}
@@ -31,7 +32,7 @@
         <img src="{{'/' + question.image }}" alt="question_image" />
         {% endif %}
         <br /><br />
-        <small>Posted on: {{ question.submission_time }}</small>
+        <small>Posted on: {{ question.submission_time }} by: {{ author }}</small>
         <br />
     </p>
 
@@ -101,7 +102,7 @@
     </div>
     {{ answer.vote_number }} votes
     <br />
-    <small>Posted on: {{ answer.submission_time }}</small>
+    <small>Posted on: {{ answer.submission_time }} by: {{ answer.author }}</small>
     <br /><br />
 
     <div class="answer-comments">

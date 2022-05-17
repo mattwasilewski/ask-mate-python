@@ -1,12 +1,27 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash
-import data_manager
-import util
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session, flash
 from dotenv import load_dotenv
 from bonus_questions import SAMPLE_QUESTIONS
+import data_manager
+import util
+import os
 import bcrypt
 
 load_dotenv()
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY')
+
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+
+def validate_login(username, password):
+    userdata = data_manager.get_user_data_by_username(username)
+    if userdata and verify_password(password, userdata.get('password')):
+        session['username'] = username
+        flash('You were successfully logged in!', 'success')
+        return redirect(url_for('main_page'))
 
 
 @app.route("/")
@@ -153,8 +168,10 @@ def main():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login_user():
+    if request.method == 'POST':
+        return validate_login(request.form.get('username'), request.form.get('user-password'))
     return render_template('login.html')
 
 
@@ -190,6 +207,5 @@ if __name__ == "__main__":
         host='0.0.0.0',
         port=8000,
         debug=True)
-
-
-#get all usernames/if input in usernames to chuj error=none
+    
+    

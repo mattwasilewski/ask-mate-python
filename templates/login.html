@@ -1,6 +1,12 @@
-{% extends 'base.html' %}
-{% block title %} Login | AskMate {% endblock %}
-{% block content %}
-{{ super() }}
-
+{% extends 'base.html' %} {% block title %} Login | AskMate {% endblock %} {%
+block content %} {{ super() }}
+<div>
+    <form action="{{ url_for('login_user') }}" method="post">
+        <label for="user">Username:</label>
+        <input type="text" id="user" name="username" required />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="user-password" required />
+        <button type="submit">Login</button>
+    </form>
+</div>
 {% endblock %}

@@ -296,6 +296,7 @@ def edit_answer(cursor, answer_id, message):
 
 
 @database_common.connection_handler
+
 def add_user_to_database(cursor, username, password, registration_date):
     query = """
         INSERT INTO users (username,  password, registration_date)
@@ -311,6 +312,17 @@ def get_all_usernames(cursor):
         """
     cursor.execute(query)
     return cursor.fetchall()
+
+  
+def get_user_data_by_username(cursor, username):
+    query = """
+        SELECT username, password, registration_date FROM users
+        WHERE username = %s
+        """
+    cursor.execute(query, (username,))
+    return cursor.fetchone()
+
+
 
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy

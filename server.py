@@ -27,6 +27,9 @@ def validate_login(username, password):
         session['username'] = username
         flash('You were successfully logged in!', 'success')
         return redirect(url_for('main_page'))
+    else:
+        flash('Invalid login attempt', 'danger')
+        return redirect(url_for('login_user'))
 
 
 @app.route("/")

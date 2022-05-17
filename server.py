@@ -8,7 +8,7 @@ import bcrypt
 
 load_dotenv()
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY')
+app.secret_key = b'_5#y2L"F4Q8zec]/'
 
 
 def hash_password(plain_text_password):
@@ -216,7 +216,6 @@ def register():
     return render_template('register.html')
 
 
-
 @app.route('/logout')
 def logout():
     # session.pop('_flashes', None)
@@ -226,6 +225,11 @@ def logout():
     session.pop('username', None)
     flash("You have been logged out.", 'success')
     return redirect(url_for('main_page'))
+
+
+@app.route('/users')
+def user_list():
+    return render_template('user-list.html')
 
 
 if __name__ == "__main__":

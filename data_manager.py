@@ -10,27 +10,30 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 BASE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 
-def save_image_path(file, message, question_id=None, title=None):
+def save_image_path(file, message, author, question_id=None, title=None):
     filename = ''
     if file.filename != '' and file and allowed_file(file.filename, ALLOWED_EXTENSIONS):
         filename = secure_filename(file.filename)
         file.save(os.path.join(BASE_PATH + UPLOAD_FOLDER, filename))
-    set_answer_data(message, filename, question_id) if title is None else set_question_data(title, message, filename)
+    set_answer_data(message, filename, question_id, author) if title is None else set_question_data(title,
+                                                                                                    message,
+                                                                                                    filename,
+                                                                                                    author)
 
 
-def set_answer_data(message, filename, question_id):
+def set_answer_data(message, filename, question_id, author):
     submission_time = get_current_time()
     vote_number = 0
     image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
-    add_answer(submission_time, vote_number, question_id, message, image)
+    add_answer(submission_time, vote_number, question_id, message, image, author)
 
 
-def set_question_data(title, message, filename):
+def set_question_data(title, message, filename, author):
     submission_time = get_current_time()
     view_number = 0
     vote_number = 0
     image = UPLOAD_FOLDER + '/' + filename if filename != '' else None
-    add_question_to_database(submission_time, view_number, vote_number, title, message, image)
+    add_question_to_database(submission_time, view_number, vote_number, title, message, image, author)
 
 
 def get_current_time():
@@ -69,7 +72,7 @@ def get_questions_asc(cursor, sort_method):
 @database_common.connection_handler
 def get_question_by_id(cursor, question_id):
     query = """
-        SELECT title, message, submission_time, vote_number, view_number, image
+        SELECT title, message, submission_time, vote_number, view_number, image, user_id
         FROM question
         WHERE id = %s"""
     cursor.execute(query, (question_id,))
@@ -109,8 +112,9 @@ def get_five_latest_questions(cursor):
 @database_common.connection_handler
 def get_answers_by_id(cursor, question_id):
     query = """
-        SELECT id, message, submission_time, vote_number, image
+        SELECT answer.id, message, submission_time, vote_number, image, u.username AS author
         FROM answer
+        INNER JOIN users u on answer.user_id = u.id
         WHERE question_id = %s
         ORDER BY vote_number desc"""
     cursor.execute(query, (question_id,))
@@ -118,13 +122,13 @@ def get_answers_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def add_question_to_database(cursor, submission_time, view_number, vote_number, title, message, image):
+def add_question_to_database(cursor, submission_time, view_number, vote_number, title, message, image, author):
     query = """
-        INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-        VALUES (%(time)s, %(view_n)s, %(vote_n)s, %(title)s, %(message)s, %(image)s)
+        INSERT INTO question (submission_time, view_number, vote_number, title, message, image, user_id)
+        VALUES (%(time)s, %(view_n)s, %(vote_n)s, %(title)s, %(message)s, %(image)s, %(author_id)s)
     """
     cursor.execute(query, {'time': submission_time, 'view_n': view_number, 'vote_n': vote_number,
-                           'title': title, 'message': message, 'image': image})
+                           'title': title, 'message': message, 'image': image, 'author_id': author})
 
 
 @database_common.connection_handler
@@ -148,13 +152,13 @@ def edit_question(cursor, question_id, title, message):
 
 
 @database_common.connection_handler
-def add_answer(cursor, submission_time, vote_number, question_id, message, image):
+def add_answer(cursor, submission_time, vote_number, question_id, message, image, author):
     query = """
-        INSERT INTO answer(submission_time, vote_number, question_id, message, image)
-        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s)
+        INSERT INTO answer(submission_time, vote_number, question_id, message, image, user_id)
+        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s, %(author_id)s)
          """
-    cursor.execute(query, {'submission_time': submission_time, 'vote_number': vote_number, 'question_id':question_id,
-                           'message': message, 'image': image})
+    cursor.execute(query, {'submission_time': submission_time, 'vote_number': vote_number, 'question_id': question_id,
+                           'message': message, 'image': image, 'author_id': author})
 
 
 @database_common.connection_handler
@@ -316,12 +320,21 @@ def get_all_usernames(cursor):
 @database_common.connection_handler
 def get_user_data_by_username(cursor, username):
     query = """
-        SELECT username, password, registration_date FROM users
+        SELECT username, password, registration_date, id FROM users
         WHERE username = %s
         """
     cursor.execute(query, (username,))
     return cursor.fetchone()
 
+
+@database_common.connection_handler
+def get_author_by_id(cursor, user_id):
+    query = """
+        SELECT username FROM users
+        WHERE id = %s
+        """
+    cursor.execute(query, (user_id,))
+    return cursor.fetchone()
 
 
 #todo jak uzyskac dostep do answer.message

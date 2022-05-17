@@ -112,7 +112,7 @@ def get_five_latest_questions(cursor):
 @database_common.connection_handler
 def get_answers_by_id(cursor, question_id):
     query = """
-        SELECT answer.id, message, submission_time, vote_number, image, u.username AS author
+        SELECT answer.id AS id, message, submission_time, vote_number, image, u.username AS author
         FROM answer
         INNER JOIN users u on answer.user_id = u.id
         WHERE question_id = %s
@@ -132,13 +132,14 @@ def add_question_to_database(cursor, submission_time, view_number, vote_number, 
 
 
 @database_common.connection_handler
-def add_comment_to_question(cursor, question_id, message, submission_time, edited_count):
+def add_comment_to_question(cursor, question_id, message, submission_time, edited_count, author):
     query = """
-        INSERT INTO comment (question_id,  message, submission_time, edited_count)
-        VALUES (%(question_id)s, %(message)s, %(submission_time)s, %(edited_count)s)
+        INSERT INTO comment (question_id,  message, submission_time, edited_count, user_id)
+        VALUES (%(question_id)s, %(message)s, %(submission_time)s,
+         %(edited_count)s, %(author_id)s)
         """
     cursor.execute(query, {'question_id': int(question_id), 'message': message, 'submission_time': submission_time,
-                           'edited_count': edited_count})
+                           'edited_count': edited_count, 'author_id': author})
 
 
 @database_common.connection_handler
@@ -258,7 +259,10 @@ def get_questions_by_searching_phrase(cursor, searching_phrase):
 @database_common.connection_handler
 def get_all_comments(cursor):
     query = """
-        SELECT * FROM comment
+        SELECT comment.id, question_id, answer_id, message, submission_time,
+               edited_count, u.username AS author
+        FROM comment
+        INNER JOIN users u on comment.user_id = u.id
         """
     cursor.execute(query)
     return cursor.fetchall()
@@ -280,13 +284,13 @@ def delete_comment_by_answer_id(cursor, answer_id):
 
 
 @database_common.connection_handler
-def add_comment_to_answer(cursor, answer_id, message, submission_time, edited_count):
+def add_comment_to_answer(cursor, answer_id, message, submission_time, edited_count, author):
     query = """
-        INSERT INTO comment (answer_id,  message, submission_time, edited_count)
-        VALUES (%(answer_id)s, %(message)s, %(submission_time)s, %(edited_count)s)
+        INSERT INTO comment (answer_id,  message, submission_time, edited_count, user_id)
+        VALUES (%(answer_id)s, %(message)s, %(submission_time)s, %(edited_count)s, %(author_id)s)
         """
     cursor.execute(query, {'answer_id': int(answer_id), 'message': message, 'submission_time': submission_time,
-                           'edited_count': edited_count})
+                           'edited_count': edited_count, 'author_id': author})
 
 
 @database_common.connection_handler

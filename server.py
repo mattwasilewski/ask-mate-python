@@ -175,8 +175,37 @@ def login_user():
     return render_template('login.html')
 
 
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    error = ""
+    if request.method == 'POST':
+        all_usernames = data_manager.get_all_usernames()
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = hash_password(password)
+        registration_date = data_manager.get_current_time()
+        if not any(d['username'] == username for d in all_usernames):
+            data_manager.add_user_to_database(username, hashed_password, registration_date)
+            return redirect(url_for('main_page'))
+        else:
+            error = 'This username already exist'
+    return render_template('register.html', error=error)
+
+
+def hash_password(plain_text_password):
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',
         port=8000,
         debug=True)
+    
+    

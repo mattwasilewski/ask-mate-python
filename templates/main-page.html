@@ -28,7 +28,10 @@
                 <small>Posted on: {{ question.submission_time }}</small>
             </div>
         {% endfor %}
-    <button><a href="{{ url_for('add_question') }}">Add a question</a></button>
     </div>
+    {% if username %}
+    <button><a href="{{ url_for('add_question') }}">Add a question</a></button>
+    {% endif %}
+
 
 {% endblock %}

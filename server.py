@@ -200,7 +200,7 @@ def login_user():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        all_usernames = data_manager.get_all_usernames()
+        all_usernames = data_manager.get_users_data()
         username = request.form['username']
         password = request.form['password']
         hashed_password = hash_password(password)
@@ -229,7 +229,17 @@ def logout():
 
 @app.route('/users')
 def user_list():
-    return render_template('user-list.html')
+    usernames = data_manager.get_users_data()
+    count_questions = data_manager.count_questions_by_user_id()
+    count_answers = data_manager.count_answers_by_user_id()
+    count_comments = data_manager.count_comments_by_user_id()
+    registration_date = data_manager.get_users_data()
+    return render_template('user-list.html', usernames=usernames, count_questions=count_questions,
+                           count_answers=count_answers, count_comments=count_comments,
+                           registration_date=registration_date)
+
+
+
 
 
 if __name__ == "__main__":

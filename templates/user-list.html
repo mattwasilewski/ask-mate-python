@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
-    Testing
-
-
+{% for user in usernames %}
+    {{ user.username }}<br>
+{% endfor %}
 {% endblock %}

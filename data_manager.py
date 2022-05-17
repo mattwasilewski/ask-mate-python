@@ -305,9 +305,9 @@ def add_user_to_database(cursor, username, password, registration_date):
 
 
 @database_common.connection_handler
-def get_all_usernames(cursor):
+def get_users_data(cursor):
     query = """
-        SELECT username FROM users
+        SELECT username, registration_date FROM users
         """
     cursor.execute(query)
     return cursor.fetchall()
@@ -322,6 +322,41 @@ def get_user_data_by_username(cursor, username):
     cursor.execute(query, (username,))
     return cursor.fetchone()
 
+
+@database_common.connection_handler
+def count_answers_by_user_id(cursor):
+    query = """
+        SELECT user_id, COUNT(user_id) as number_of_answers
+        FROM answer
+        GROUP BY user_id
+        ORDER BY user_id
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def count_questions_by_user_id(cursor):
+    query = """
+        SELECT user_id, COUNT(user_id) as number_of_questions
+        FROM question
+        GROUP BY user_id
+        ORDER BY user_id
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def count_comments_by_user_id(cursor):
+    query = """
+        SELECT user_id, COUNT(user_id) as number_of_comments
+        FROM comment
+        GROUP BY user_id
+        ORDER BY user_id
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 #todo jak uzyskac dostep do answer.message

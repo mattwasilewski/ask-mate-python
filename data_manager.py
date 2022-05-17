@@ -296,6 +296,24 @@ def edit_answer(cursor, answer_id, message):
 
 
 @database_common.connection_handler
+
+def add_user_to_database(cursor, username, password, registration_date):
+    query = """
+        INSERT INTO users (username,  password, registration_date)
+        VALUES (%(username)s, %(password)s, %(registration_date)s)
+        """
+    cursor.execute(query, {'username': username, 'password': password, 'registration_date': registration_date})
+
+
+@database_common.connection_handler
+def get_all_usernames(cursor):
+    query = """
+        SELECT username FROM users
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+  
 def get_user_data_by_username(cursor, username):
     query = """
         SELECT username, password, registration_date FROM users

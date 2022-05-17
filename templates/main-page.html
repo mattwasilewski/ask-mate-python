@@ -2,6 +2,13 @@
 {% block title %} AskMate {% endblock %}
 {% block content %}
     {{ super() }}
+    <button><a href="{{ url_for('register') }}">Registration</a></button>
+    <form action="{{ url_for('search_questions') }}">
+        <label for="search-input"></label>
+        <input type="text" id="search-input" name="q" placeholder="Search" required>
+        <button type="submit">Search</button>
+    </form>
+    <a href="{{ url_for('route_list') }}">Questions</a>
     <div class="question-list">
         {% for question in questions %}
             <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>

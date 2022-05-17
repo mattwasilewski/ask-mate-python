@@ -1,99 +1,140 @@
-{% extends 'base.html' %}
-{% block content %}
-    <div id="question-page">
-        <h2>{{ question.title }}
-        <button><a href="{{ url_for('edit_question', question_id=question_id )}}">Edit</a></button>
-        <form action="{{ url_for('delete_question', question_id=question_id) }}" method="post">
+{% extends 'base.html' %} {% block content %}
+<div id="question-page">
+    <h2>
+        {{ question.title }}
+        <button>
+            <a href="{{ url_for('edit_question', question_id=question_id )}}"
+                >Edit</a
+            >
+        </button>
+        <form
+            action="{{ url_for('delete_question', question_id=question_id) }}"
+            method="post"
+        >
             <button type="submit">Delete</button>
         </form>
-        <button><a href="{{ url_for('add_comment_to_question', question_id=question_id )}}">Add comment</a></button>
-
-        </h2>
-        <p>{{ question.view_number }} views {{ question.vote_number }} votes
-            <br><br>
-            {{ question.message }}
-            <br>
-            {% if question.image != None %}
-            <img src="{{'/' + question.image }}" alt="question_image">
-            {% endif %}
-            <br><br>
-            <small>Posted on: {{ question.submission_time }}</small>
-            <br>
-        </p>
+        {% if username %}
+        <button>
+            <a
+                href="{{ url_for('add_comment_to_question', question_id=question_id )}}"
+                >Add comment</a
+            >
+        </button>
+        {% endif %}
+    </h2>
+    <p>
+        {{ question.view_number }} views {{ question.vote_number }} votes
+        <br /><br />
+        {{ question.message }}
+        <br />
+        {% if question.image != None %}
+        <img src="{{'/' + question.image }}" alt="question_image" />
+        {% endif %}
+        <br /><br />
+        <small>Posted on: {{ question.submission_time }}</small>
+        <br />
+    </p>
 
     <div class="question-comments">
         <table>
-            {% for comment in comments %}
-                {% if comment['question_id'] == question_id|int %}
-                <tr><th><b>Comment to question:</b></th></tr>
-                <tr><td>Message:<br>{{ comment.message }}</td></tr>
-                <tr><td>Submission time:<br>{{ comment.submission_time }}</td></tr>
-                <tr><td>Edited times:<br>{{ comment.edited_count }}</td></tr>
-                <tr><td>------------------------------------------</td></tr>
-                {% endif %}
-            {% endfor %}
+            {% for comment in comments %} {% if comment['question_id'] ==
+            question_id|int %}
+            <tr>
+                <th><b>Comment to question:</b></th>
+            </tr>
+            <tr>
+                <td>Message:<br />{{ comment.message }}</td>
+            </tr>
+            <tr>
+                <td>Submission time:<br />{{ comment.submission_time }}</td>
+            </tr>
+            <tr>
+                <td>Edited times:<br />{{ comment.edited_count }}</td>
+            </tr>
+            <tr>
+                <td>------------------------------------------</td>
+            </tr>
+            {% endif %} {% endfor %}
         </table>
     </div>
-
 
     {% for answer in answers %}
     <div class="answers">
         <h3>Answers:</h3>
         {{ answer.message }}
-        <br>
+        <br />
         {% if answer.image != None %}
-        <img src="{{'/' + answer.image }}" alt="answer-image"/>
+        <img src="{{'/' + answer.image }}" alt="answer-image" />
         {% endif %}
-        <br>
-        <button><a href="{{ url_for('edit_answer', answer_id=answer.id) }}">Edit</a> </button>
+        <br />
+        <button>
+            <a href="{{ url_for('edit_answer', answer_id=answer.id) }}">Edit</a>
+        </button>
 
-        <form action="{{ url_for('delete_answer', answer_id=answer.id) }}" method="post">
+        <form
+            action="{{ url_for('delete_answer', answer_id=answer.id) }}"
+            method="post"
+        >
             <button type="submit">Delete</button>
         </form>
 
-
-        <form action="{{ url_for('answer_vote_up', answer_id=answer.id) }}" method="post">
+        <form
+            action="{{ url_for('answer_vote_up', answer_id=answer.id) }}"
+            method="post"
+        >
             <button type="submit">Vote up</button>
         </form>
-        <form action="{{ url_for('answer_vote_down', answer_id=answer.id) }}" method="post">
+        <form
+            action="{{ url_for('answer_vote_down', answer_id=answer.id) }}"
+            method="post"
+        >
             <button type="submit">Vote down</button>
         </form>
-        <button><a href="{{ url_for('add_comment_to_answer', answer_id=answer.id) }}">Add comment</a></button>
-    </div>
-        {{ answer.vote_number }} votes
-        <br>
-        <small>Posted on: {{ answer.submission_time }}</small>
-        <br><br>
-
-        <div class="answer-comments">
-        <table>
-
-
-
-        {% for comment in comments %}
-
-        {% if comment['answer_id'] == answer['id'] %}
-                <tr><th><b>Comment </b></th></tr>
-                <tr><td>Message:<br>{{ comment.message }}</td></tr>
-                <tr><td>Submission time:<br>{{ comment.submission_time }}</td></tr>
-                <tr><td>Edited times:<br>{{ comment.edited_count }}</td></tr>
-                <tr><td>------------------------------------------</td></tr>
+        {% if username %}
+        <button>
+            <a
+                href="{{ url_for('add_comment_to_answer', answer_id=answer.id) }}"
+                >Add comment</a
+            >
+        </button>
         {% endif %}
-        {% endfor %}
+    </div>
+    {{ answer.vote_number }} votes
+    <br />
+    <small>Posted on: {{ answer.submission_time }}</small>
+    <br /><br />
 
+    <div class="answer-comments">
+        <table>
+            {% for comment in comments %} {% if comment['answer_id'] ==
+            answer['id'] %}
+            <tr>
+                <th><b>Comment </b></th>
+            </tr>
+            <tr>
+                <td>Message:<br />{{ comment.message }}</td>
+            </tr>
+            <tr>
+                <td>Submission time:<br />{{ comment.submission_time }}</td>
+            </tr>
+            <tr>
+                <td>Edited times:<br />{{ comment.edited_count }}</td>
+            </tr>
+            <tr>
+                <td>------------------------------------------</td>
+            </tr>
+            {% endif %} {% endfor %}
         </table>
-        </div>
+    </div>
 
-        {#todo w przypadku edycji dodac edited on + posted on#}
-        </div>
+    {#todo w przypadku edycji dodac edited on + posted on#}
+</div>
 
-        {% endfor %}
+{% endfor %} {% if username %}
+<button>
+    <a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a>
+</button>
+{% endif %}
+<button><a href="{{ url_for('route_list') }}">Go back</a></button>
 
-
-
-
-
-        <button><a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a></button>
-        <button><a href="{{ url_for('route_list') }}">Go back</a></button>
-
-    {% endblock %}
+{% endblock %}

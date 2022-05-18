@@ -42,4 +42,21 @@
         </tr>
 
 </table>
+    <table>
+     <tr>
+        <th>Answers:</th>
+    </tr>
+        {% for answer in answers %}
+    <tr>
+        <td>
+            <a href="{{ url_for('display_question', question_id=answer.question_id) }}">{{ answer.message }}</a>
+        </td>
+    </tr>
+        {% endfor %}
+    <tr><td></td></tr>
+    <tr>
+        <td></td>
+    </tr>
+
+    </table>
 {% endblock %}

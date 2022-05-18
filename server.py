@@ -165,7 +165,6 @@ def answer_vote_down(answer_id):
 
 @app.route("/question/<question_id>/new-comment", methods=['GET', 'POST'])
 def add_comment_to_question(question_id):
-    #id, message, submission_time, edited_count
     userdata = data_manager.get_user_data_by_username(session['username'])
     if request.method == 'POST':
         message = request.form.get('message')
@@ -225,7 +224,6 @@ def login_user():
     if request.method == 'POST':
         return validate_login(request.form.get('username'), request.form.get('user-password'))
     elif session.get('username'):
-        # session.pop('_flashes', None)
         flash("You are already logged in.", 'warning')
         return redirect(url_for('main_page'))
     return render_template('login.html')
@@ -252,7 +250,6 @@ def register():
 
 @app.route('/logout')
 def logout():
-    # session.pop('_flashes', None)
     if not session.get('username'):
         flash("You need to be logged in to access this page.", 'warning')
         return redirect(url_for('main_page'))
@@ -280,15 +277,15 @@ def user_page(user_id):
         flash("You can not access this page.", 'warning')
         return redirect(url_for('main_page'))
     username = session.get('username')
-    user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     userdata = data_manager.get_user_data_by_username(username)
-    print(userdata)
     count_questions = data_manager.count_data_by_user_id('question')
     count_answers = data_manager.count_data_by_user_id('answer')
     count_comments = data_manager.count_data_by_user_id('comment')
+    answers = data_manager.get_users_replies(username, 'answer')
+    replies_c = data_manager.get_users_replies(username, 'comment')
     return render_template('user-page.html', userdata=userdata, count_questions=count_questions,
                            count_answers=count_answers, count_comments=count_comments,
-                           username=username, user_id=user_id)
+                           username=username, user_id=user_id, answers=answers)
 
 
 if __name__ == "__main__":

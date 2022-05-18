@@ -173,71 +173,29 @@ def get_question_id_by_answer_id(cursor, answer_id):
 
 
 @database_common.connection_handler
-def delete_question(cursor, question_id):
-    query = """
+def delete_data(cursor, id, data):
+    query = f"""
         DELETE
-        FROM question
+        FROM {data}
         WHERE id = %s"""
+    cursor.execute(query, (id,))
+
+
+@database_common.connection_handler
+def delete_data_by_question_id(cursor, question_id, data):
+    query = f"""
+        DELETE FROM {data} WHERE question_id = %s"""
     cursor.execute(query, (question_id,))
 
 
 @database_common.connection_handler
-def delete_answer(cursor, answer_id):
+def vote_number_count(cursor, id, action, table):
+
     query = """
-        DELETE
-        FROM answer
-        WHERE id = %s"""
-    cursor.execute(query, (answer_id,))
-
-
-@database_common.connection_handler
-def delete_answer_by_question_id(cursor, question_id):
-    query = """
-        DELETE FROM answer WHERE question_id = %s"""
-    cursor.execute(query, (question_id,))
-
-
-@database_common.connection_handler
-def delete_comment_by_question_id(cursor, question_id):
-    query = """
-        DELETE FROM comment WHERE question_id = %s"""
-    cursor.execute(query, (question_id,))
-
-
-@database_common.connection_handler
-def increase_question_vote_number_count(cursor, question_id):
-    query = """
-        UPDATE question
-        SET vote_number = vote_number + 1
-        WHERE id = %s"""
-    cursor.execute(query, (question_id,))
-
-
-@database_common.connection_handler
-def decrease_question_vote_number_count(cursor, question_id):
-    query = """
-        UPDATE question
-        SET vote_number = vote_number - 1
-        WHERE id = %s"""
-    cursor.execute(query, (question_id,))
-
-
-@database_common.connection_handler
-def increase_answer_vote_number_count(cursor, answer_id):
-    query = """
-        UPDATE answer
-        SET vote_number = vote_number + 1
-        WHERE id = %s"""
-    cursor.execute(query, (answer_id,))
-
-
-@database_common.connection_handler
-def decrease_answer_vote_number_count(cursor, answer_id):
-    query = """
-        UPDATE answer
-        SET vote_number = vote_number - 1
-        WHERE id = %s"""
-    cursor.execute(query, (answer_id,))
+        UPDATE {}
+        SET vote_number = vote_number {} 1
+        WHERE id = %s""".format(table, action)
+    cursor.execute(query, (id,))
 
 
 @database_common.connection_handler

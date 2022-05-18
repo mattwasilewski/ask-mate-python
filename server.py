@@ -133,33 +133,33 @@ def delete_answer(answer_id):
     #todo jak dostać sie do question id w inny sposob -> jest w templatce html
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
     data_manager.delete_comment_by_answer_id(answer_id)
-    data_manager.delete_answer(answer_id)
+    data_manager.delete_data(answer_id, 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route("/question/<question_id>/vote-up", methods=['POST'])
 def question_vote_up(question_id):
-    data_manager.increase_question_vote_number_count(question_id)
+    data_manager.vote_number_count(question_id, '+', 'question')
     return redirect(url_for('route_list'))
 
 
 @app.route("/question/<question_id>/vote-down", methods=['POST'])
 def question_vote_down(question_id):
-    data_manager.decrease_question_vote_number_count(question_id)
+    data_manager.vote_number_count(question_id, '-', 'question')
     return redirect(url_for('route_list'))
 
 
 @app.route("/answer/<answer_id>/vote-up", methods=['POST'])
 def answer_vote_up(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
-    data_manager.increase_answer_vote_number_count(answer_id)
+    data_manager.vote_number_count(answer_id, '+', 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route("/answer/<answer_id>/vote-down", methods=['POST'])
 def answer_vote_down(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
-    data_manager.decrease_answer_vote_number_count(answer_id)
+    data_manager.vote_number_count(answer_id, '-', 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -265,16 +265,13 @@ def logout():
 def user_list():
     username = session.get('username')
     user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
-    usersdata = data_manager.get_users_data()
+    users_data = data_manager.get_users_data()
     count_questions = data_manager.count_data_by_user_id('question')
-    print(count_questions)
     count_answers = data_manager.count_data_by_user_id('answer')
     count_comments = data_manager.count_data_by_user_id('comment')
-    registration_date = data_manager.get_users_data()
-    return render_template('user-list.html', usersdata=usersdata, count_questions=count_questions,
+    return render_template('user-list.html', usersdata=users_data, count_questions=count_questions,
                            count_answers=count_answers, count_comments=count_comments,
-                           registration_date=registration_date, username=username,
-                           user_id=user_id)
+                           username=username, user_id=user_id)
 
 
 @app.route('/user/<int:user_id>')
@@ -282,8 +279,16 @@ def user_page(user_id):
     if not session.get('username'):
         flash("You can not access this page.", 'warning')
         return redirect(url_for('main_page'))
-    userdata = data_manager.get_user_data_by_username(session['username'])
-    return render_template('user-page.html', username=userdata['username'], user_id=user_id)
+    username = session.get('username')
+    user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
+    userdata = data_manager.get_user_data_by_username(username)
+    print(userdata)
+    count_questions = data_manager.count_data_by_user_id('question')
+    count_answers = data_manager.count_data_by_user_id('answer')
+    count_comments = data_manager.count_data_by_user_id('comment')
+    return render_template('user-page.html', userdata=userdata, count_questions=count_questions,
+                           count_answers=count_answers, count_comments=count_comments,
+                           username=username, user_id=user_id)
 
 
 if __name__ == "__main__":

@@ -68,10 +68,12 @@ def add_question():
 
 @app.route("/list")
 def route_list():
+    username = session.get('username')
+    user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     sort_method = request.args.get('order_by')
     order = request.args.get('order_direction')
     question = util.get_sorted_questions(sort_method, order)
-    return render_template('list.html', questions=question, username=session.get('username'))
+    return render_template('list.html', questions=question, username=username, user_id=user_id)
 
 
 @app.route("/question/<question_id>")
@@ -115,7 +117,8 @@ def edit_question(question_id):
         flash("You need to be logged in to access this page.", 'warning')
         return redirect(url_for('main_page'))
     return render_template('edit-question.html', question=question,
-                           question_id=question_id, username=session['username'])
+                           question_id=question_id, username=session['username'],
+                           user_id=question['user_id'])
 
 
 @app.route("/question/<question_id>/delete", methods=['POST'])
@@ -162,8 +165,8 @@ def answer_vote_down(answer_id):
 @app.route("/question/<question_id>/new-comment", methods=['GET', 'POST'])
 def add_comment_to_question(question_id):
     #id, message, submission_time, edited_count
+    userdata = data_manager.get_user_data_by_username(session['username'])
     if request.method == 'POST':
-        userdata = data_manager.get_user_data_by_username(session['username'])
         message = request.form.get('message')
         submission_time = data_manager.get_current_time()
         edited_count = 0
@@ -173,14 +176,15 @@ def add_comment_to_question(question_id):
     elif not session.get('username'):
         flash("You need to be logged in to access this page.", 'warning')
         return redirect(url_for('main_page'))
-    return render_template('question_comment.html')
+    return render_template('question_comment.html', username=userdata['username'],
+                           user_id=userdata['id'])
 
 
 @app.route("/answer/<answer_id>/new-comment", methods=['GET', 'POST'])
 def add_comment_to_answer(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    userdata = data_manager.get_user_data_by_username(session['username'])
     if request.method == 'POST':
-        userdata = data_manager.get_user_data_by_username(session['username'])
         message = request.form.get('message')
         submission_time = data_manager.get_current_time()
         edited_count = 0
@@ -190,13 +194,16 @@ def add_comment_to_answer(answer_id):
     elif not session.get('username'):
         flash("You need to be logged in to access this page.", 'warning')
         return redirect(url_for('main_page'))
-    return render_template('answer_comment.html', answer_id=answer_id)
+    return render_template('answer_comment.html', answer_id=answer_id,
+                           username=userdata['username'], user_id=userdata['id'])
 
 
 @app.route("/answer/<answer_id>/edit", methods=['POST', 'GET'])
 def edit_answer(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
     answer = data_manager.get_answer_message_by_id(answer_id)
+    username = session.get('username')
+    user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     if request.method == 'POST':
         data_manager.edit_answer(answer_id, request.form['message'])
         return redirect(url_for('display_question', question_id=question_id))
@@ -204,7 +211,7 @@ def edit_answer(answer_id):
         flash("You need to be logged in to access this page.", 'warning')
         return redirect(url_for('main_page'))
     return render_template('edit-answer.html', answer=answer,
-                           answer_id=answer_id, username=session['username'])
+                           answer_id=answer_id, username=username, user_id=user_id)
 
 
 @app.route("/bonus-questions")

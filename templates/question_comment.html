@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block content %}
+{% block content %} {{ super() }}
 
     <div id="comment_page">
        <form action="{{ add_comment_to_question }}" method="post" enctype="multipart/form-data">

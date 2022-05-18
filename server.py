@@ -139,13 +139,13 @@ def delete_answer(answer_id):
 
 @app.route("/question/<question_id>/vote-up", methods=['POST'])
 def question_vote_up(question_id):
-    data_manager.increase_question_vote_number_count(question_id)
+    data_manager.question_vote_number_count(question_id, '+')
     return redirect(url_for('route_list'))
 
 
 @app.route("/question/<question_id>/vote-down", methods=['POST'])
 def question_vote_down(question_id):
-    data_manager.decrease_question_vote_number_count(question_id)
+    data_manager.question_vote_number_count(question_id, '-')
     return redirect(url_for('route_list'))
 
 

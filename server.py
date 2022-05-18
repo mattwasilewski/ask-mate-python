@@ -282,7 +282,6 @@ def user_page(user_id):
     count_answers = data_manager.count_data_by_user_id('answer')
     count_comments = data_manager.count_data_by_user_id('comment')
     answers = data_manager.get_users_replies(username, 'answer')
-    replies_c = data_manager.get_users_replies(username, 'comment')
     return render_template('user-page.html', userdata=userdata, count_questions=count_questions,
                            count_answers=count_answers, count_comments=count_comments,
                            username=username, user_id=user_id, answers=answers)

@@ -34,15 +34,21 @@ def validate_login(username, password):
 
 @app.route("/")
 def main_page():
+    username = session.get('username')
+    user_id = data_manager.get_user_data_by_username(username).get('id')
     questions = data_manager.get_five_latest_questions()
-    return render_template('main-page.html', questions=questions, username=session.get('username'))
+    return render_template('main-page.html', questions=questions,
+                           username=session.get('username'), user_id=user_id)
 
 
 @app.route("/search")
 def search_questions():
     searching_phrase = request.args.get('q')
+    username = session.get('username')
+    user_id = data_manager.get_user_data_by_username(username).get('id')
     questions = data_manager.get_questions_by_searching_phrase(searching_phrase)
-    return render_template('search-questions.html', searching_phrase=searching_phrase, questions=questions)
+    return render_template('search-questions.html', searching_phrase=searching_phrase,
+                           questions=questions, username=username, user_id=user_id)
 
 
 @app.route("/add-question", methods=['GET', 'POST'])
@@ -76,7 +82,8 @@ def display_question(question_id):
     answers = data_manager.get_answers_by_id(question_id)
     return render_template('question.html', answers=answers, question=question,
                            question_id=question_id, comments=comments,
-                           username=session.get('username'), author=question_author['username'])
+                           username=session.get('username'), author=question_author['username'],
+                           user_id=question['user_id'])
 
 
 @app.route("/question/<question_id>/new-answer", methods=['POST', 'GET'])
@@ -244,6 +251,11 @@ def logout():
     session.pop('username', None)
     flash("You have been logged out.", 'success')
     return redirect(url_for('main_page'))
+
+
+@app.route('/user/<int:user_id>')
+def user_page(user_id):
+    return render_template('user-page.html', username=session.get('username'), user_id=user_id)
 
 
 if __name__ == "__main__":

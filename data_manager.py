@@ -313,6 +313,17 @@ def count_data_by_user_id(cursor, data):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def get_users_replies(cursor, username, data):
+    query = f"""
+        SELECT users.id AS id, {data}.message AS message, {data}.question_id AS question_id
+        FROM users
+        INNER JOIN {data} on {data}.user_id = users.id 
+        WHERE users.username = %s
+    """
+    cursor.execute(query, (username,))
+    return cursor.fetchall()
+
 #todo jak uzyskac dostep do answer.message
 #todo gdy w tytule pytania, jego tresci oraz odpowiedzi jest to samo slowo - wyswietla sie 3 razy
 #todo pogrupowac tak by moglo być tylko jedno takie samo question id

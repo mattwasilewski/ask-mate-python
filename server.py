@@ -229,17 +229,14 @@ def logout():
 
 @app.route('/users')
 def user_list():
-    usernames = data_manager.get_users_data()
-    count_questions = data_manager.count_questions_by_user_id()
-    count_answers = data_manager.count_answers_by_user_id()
-    count_comments = data_manager.count_comments_by_user_id()
+    usersdata = data_manager.get_users_data()
+    count_questions = data_manager.count_data_by_user_id('question')
+    count_answers = data_manager.count_data_by_user_id('answer')
+    count_comments = data_manager.count_data_by_user_id('comment')
     registration_date = data_manager.get_users_data()
-    return render_template('user-list.html', usernames=usernames, count_questions=count_questions,
+    return render_template('user-list.html', usersdata=usersdata, count_questions=count_questions,
                            count_answers=count_answers, count_comments=count_comments,
                            registration_date=registration_date)
-
-
-
 
 
 if __name__ == "__main__":

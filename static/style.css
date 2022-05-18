@@ -8,3 +8,19 @@
 .answer-comments {
     margin-left: 100px;
 }
+
+
+#main {
+        float:left;
+        width:15%;
+      }
+
+#child1 {
+        width:15%;
+        float:left;
+      }
+
+#child2 {
+        width:15%;
+        float:left;
+      }

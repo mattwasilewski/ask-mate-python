@@ -131,7 +131,7 @@ def delete_question(question_id):
 @app.route("/answer/<answer_id>/delete", methods=['POST'])
 def delete_answer(answer_id):
     #todo jak dostać sie do question id w inny sposob -> jest w templatce html
-    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    question_id = data_manager.get_data_by_id(answer_id, 'question_id')['question_id']
     data_manager.delete_comment_by_answer_id(answer_id)
     data_manager.delete_data(answer_id, 'answer')
     return redirect(url_for('display_question', question_id=question_id))
@@ -151,14 +151,14 @@ def question_vote_down(question_id):
 
 @app.route("/answer/<answer_id>/vote-up", methods=['POST'])
 def answer_vote_up(answer_id):
-    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    question_id = data_manager.get_data_by_id(answer_id, 'question_id')['question_id']
     data_manager.vote_number_count(answer_id, '+', 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route("/answer/<answer_id>/vote-down", methods=['POST'])
 def answer_vote_down(answer_id):
-    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    question_id = data_manager.get_data_by_id(answer_id, 'question_id')['question_id']
     data_manager.vote_number_count(answer_id, '-', 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
@@ -183,7 +183,7 @@ def add_comment_to_question(question_id):
 
 @app.route("/answer/<answer_id>/new-comment", methods=['GET', 'POST'])
 def add_comment_to_answer(answer_id):
-    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
+    question_id = data_manager.get_data_by_id(answer_id, 'question_id')['question_id']
     userdata = data_manager.get_user_data_by_username(session['username'])
     if request.method == 'POST':
         message = request.form.get('message')
@@ -201,8 +201,8 @@ def add_comment_to_answer(answer_id):
 
 @app.route("/answer/<answer_id>/edit", methods=['POST', 'GET'])
 def edit_answer(answer_id):
-    question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
-    answer = data_manager.get_answer_message_by_id(answer_id)
+    question_id = data_manager.get_data_by_id(answer_id, 'question_id')['question_id']
+    answer = data_manager.get_data_by_id(answer_id, 'message')
     username = session.get('username')
     user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     if request.method == 'POST':

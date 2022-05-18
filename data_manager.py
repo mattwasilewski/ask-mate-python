@@ -68,6 +68,8 @@ def get_questions_asc(cursor, sort_method):
     cursor.execute(sql.SQL(query).format(col=sql.Identifier(sort_method)))
     return cursor.fetchall()
 
+#####
+
 
 @database_common.connection_handler
 def get_question_by_id(cursor, question_id):
@@ -80,14 +82,16 @@ def get_question_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def get_answer_message_by_id(cursor, answer_id):
+def get_data_by_id(cursor, id, choice):
     query = """
-        SELECT message
+        SELECT {}
         FROM answer
-        WHERE id = %s"""
-    cursor.execute(query, (answer_id,))
+        WHERE id = %s""".format(choice)
+    cursor.execute(query, (id,))
     return cursor.fetchone()
 
+
+####
 
 @database_common.connection_handler
 def get_last_question(cursor):
@@ -96,6 +100,17 @@ def get_last_question(cursor):
         WHERE id = (SELECT max(id) FROM question)"""
     cursor.execute(query)
     return cursor.fetchone()
+
+
+@database_common.connection_handler
+def get_answers_id_by_question_id(cursor, question_id):
+    query = """
+        SELECT id 
+        FROM answer 
+        WHERE question_id = %s"""
+    cursor.execute(query, (question_id,))
+    return cursor.fetchall()
+
 
 
 @database_common.connection_handler
@@ -162,15 +177,6 @@ def add_answer(cursor, submission_time, vote_number, question_id, message, image
                            'message': message, 'image': image, 'author_id': author})
 
 
-@database_common.connection_handler
-def get_question_id_by_answer_id(cursor, answer_id):
-    query = """
-       SELECT question_id
-       FROM answer
-       WHERE id = %s"""
-    cursor.execute(query, (answer_id,))
-    return cursor.fetchone()
-
 
 @database_common.connection_handler
 def delete_data(cursor, id, data):
@@ -190,7 +196,6 @@ def delete_data_by_question_id(cursor, question_id, data):
 
 @database_common.connection_handler
 def vote_number_count(cursor, id, action, table):
-
     query = """
         UPDATE {}
         SET vote_number = vote_number {} 1
@@ -226,18 +231,13 @@ def get_all_comments(cursor):
     return cursor.fetchall()
 
 
-@database_common.connection_handler
-def get_answers_id_by_question_id(cursor, question_id):
-    query = """
-        SELECT id FROM answer WHERE question_id = %s"""
-    cursor.execute(query, (question_id,))
-    return cursor.fetchall()
-
 
 @database_common.connection_handler
 def delete_comment_by_answer_id(cursor, answer_id):
     query = """
-        DELETE FROM comment WHERE answer_id = %s"""
+        DELETE 
+        FROM comment 
+        WHERE answer_id = %s"""
     cursor.execute(query, (answer_id,))
 
 

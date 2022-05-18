@@ -267,6 +267,7 @@ def user_list():
     user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     usersdata = data_manager.get_users_data()
     count_questions = data_manager.count_data_by_user_id('question')
+    print(count_questions)
     count_answers = data_manager.count_data_by_user_id('answer')
     count_comments = data_manager.count_data_by_user_id('comment')
     registration_date = data_manager.get_users_data()

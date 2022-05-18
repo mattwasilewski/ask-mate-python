@@ -19,21 +19,21 @@
             </th>
             <th>
                 {% for user_question in count_questions %}
-                    {% if userdata["id"] == user_question["user_id"] %}
+                    {% if userdata["id"] == user_question["id"] %}
                         {{ user_question["count_question"] }}
                     {% endif %}
                 {% endfor %}
             </th>
             <th>
                 {% for user_answer in count_answers %}
-                    {% if userdata["id"] == user_answer["user_id"] %}
+                    {% if userdata["id"] == user_answer["id"] %}
                         {{ user_answer["count_answer"] }}
                     {% endif %}
                 {% endfor %}
             </th>
             <th>
                 {% for user_comment in count_comments %}
-                    {% if userdata["id"] == user_comment["user_id"] %}
+                    {% if userdata["id"] == user_comment["id"] %}
                         {{ user_comment["count_comment"] }}
                     {% endif %}
                 {% endfor %}

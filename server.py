@@ -35,7 +35,7 @@ def validate_login(username, password):
 @app.route("/")
 def main_page():
     username = session.get('username')
-    user_id = data_manager.get_user_data_by_username(username).get('id')
+    user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     questions = data_manager.get_five_latest_questions()
     return render_template('main-page.html', questions=questions,
                            username=session.get('username'), user_id=user_id)
@@ -45,7 +45,7 @@ def main_page():
 def search_questions():
     searching_phrase = request.args.get('q')
     username = session.get('username')
-    user_id = data_manager.get_user_data_by_username(username).get('id')
+    user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     questions = data_manager.get_questions_by_searching_phrase(searching_phrase)
     return render_template('search-questions.html', searching_phrase=searching_phrase,
                            questions=questions, username=username, user_id=user_id)

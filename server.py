@@ -263,6 +263,8 @@ def logout():
 
 @app.route('/users')
 def user_list():
+    username = session.get('username')
+    user_id = data_manager.get_user_data_by_username(username).get('id') if username else None
     usersdata = data_manager.get_users_data()
     count_questions = data_manager.count_data_by_user_id('question')
     count_answers = data_manager.count_data_by_user_id('answer')
@@ -270,12 +272,17 @@ def user_list():
     registration_date = data_manager.get_users_data()
     return render_template('user-list.html', usersdata=usersdata, count_questions=count_questions,
                            count_answers=count_answers, count_comments=count_comments,
-                           registration_date=registration_date)
+                           registration_date=registration_date, username=username,
+                           user_id=user_id)
 
 
 @app.route('/user/<int:user_id>')
 def user_page(user_id):
-    return render_template('user-page.html', username=session.get('username'), user_id=user_id)
+    if not session.get('username'):
+        flash("You can not access this page.", 'warning')
+        return redirect(url_for('main_page'))
+    userdata = data_manager.get_user_data_by_username(session['username'])
+    return render_template('user-page.html', username=userdata['username'], user_id=user_id)
 
 
 if __name__ == "__main__":

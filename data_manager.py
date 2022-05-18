@@ -313,9 +313,10 @@ def add_user_to_database(cursor, username, password, registration_date):
 
 
 @database_common.connection_handler
-def get_all_usernames(cursor):
+def get_users_data(cursor):
     query = """
-        SELECT username FROM users
+        SELECT id, username, registration_date FROM users
+        ORDER BY id
         """
     cursor.execute(query)
     return cursor.fetchall()
@@ -339,6 +340,18 @@ def get_author_by_id(cursor, user_id):
         """
     cursor.execute(query, (user_id,))
     return cursor.fetchone()
+
+
+@database_common.connection_handler
+def count_data_by_user_id(cursor, data):
+    query = f"""
+        SELECT user_id, COUNT(user_id) as count_{data}
+        FROM {data}
+        GROUP BY user_id
+        ORDER BY user_id
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 #todo jak uzyskac dostep do answer.message

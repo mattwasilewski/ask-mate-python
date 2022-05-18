@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<table style="border:1px solid black;margin-left:auto;margin-right:auto;text-align:center">
+    <tr>
+        <th>User login:</th>
+        <th>Date of register:</th>
+        <th>Amount of questions:</th>
+        <th>Amount of answers:</th>
+        <th>Amount of comments:</th>
+    </tr>
+    {% for userdata in usersdata %}
+        <tr>
+            <th>{# zmienic na userpage kiedys #}
+                <button type="button"><a href="{{ url_for("main_page") }}">
+                    {{ userdata["username"] }}</a></button>
+            </th>
+            <th>
+                {{ userdata["registration_date"] }}
+            </th>
+            <th>
+                {% for user_question in count_questions %}
+                    {% if userdata["id"] == user_question["user_id"] %}
+                        {{ user_question["count_question"] }}
+                    {% endif %}
+                {% endfor %}
+            </th>
+            <th>
+                {% for user_answer in count_answers %}
+                    {% if userdata["id"] == user_answer["user_id"] %}
+                        {{ user_answer["count_answer"] }}
+                    {% endif %}
+                {% endfor %}
+            </th>
+            <th>
+                {% for user_comment in count_comments %}
+                    {% if userdata["id"] == user_comment["user_id"] %}
+                        {{ user_comment["count_comment"] }}
+                    {% endif %}
+                {% endfor %}
+            </th>
+        </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

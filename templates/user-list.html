@@ -11,8 +11,8 @@
     {% for userdata in usersdata %}
         <tr>
             <th>{# zmienic na userpage kiedys #}
-                <button type="button"><a href="{{ url_for("main_page") }}">
-                    {{ userdata["username"] }}</a></button>
+                <a href="{{ url_for("user_page", user_id=userdata['id'])  }}">
+                    {{ userdata["username"] }}</a>
             </th>
             <th>
                 {{ userdata["registration_date"] }}

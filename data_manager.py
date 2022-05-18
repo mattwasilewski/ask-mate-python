@@ -342,6 +342,7 @@ def get_author_by_id(cursor, user_id):
     return cursor.fetchone()
 
 
+@database_common.connection_handler
 def count_data_by_user_id(cursor, data):
     query = f"""
         SELECT user_id, COUNT(user_id) as count_{data}

@@ -303,10 +303,11 @@ def get_author_by_id(cursor, user_id):
 @database_common.connection_handler
 def count_data_by_user_id(cursor, data):
     query = f"""
-        SELECT user_id, COUNT(user_id) as count_{data}
-        FROM {data}
-        GROUP BY user_id
-        ORDER BY user_id
+        SELECT users.id AS id, COUNT({data}.user_id) AS count_{data}
+        FROM users
+        FULL JOIN {data} ON {data}.user_id = users.id
+        GROUP BY users.id
+        ORDER BY users.id
         """
     cursor.execute(query)
     return cursor.fetchall()

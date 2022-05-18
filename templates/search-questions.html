@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %} Posts containing '{{ searching_phrase }}' | AskMate {% endblock %}
-{% block content %}
+{% block content %} {{ super() }}
     <div>
     {% for question in questions %}
         <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>

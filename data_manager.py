@@ -189,31 +189,13 @@ def delete_data_by_question_id(cursor, question_id, data):
 
 
 @database_common.connection_handler
-def question_vote_number_count(cursor, question_id, action):
+def vote_number_count(cursor, id, action, table):
 
-    query = f"""
-        UPDATE question
-        SET vote_number = vote_number {action} 1
-        WHERE id = %s"""
-    cursor.execute(query, (question_id,))
-
-
-@database_common.connection_handler
-def increase_answer_vote_number_count(cursor, answer_id):
     query = """
-        UPDATE answer
-        SET vote_number = vote_number + 1
-        WHERE id = %s"""
-    cursor.execute(query, (answer_id,))
-
-
-@database_common.connection_handler
-def decrease_answer_vote_number_count(cursor, answer_id):
-    query = """
-        UPDATE answer
-        SET vote_number = vote_number - 1
-        WHERE id = %s"""
-    cursor.execute(query, (answer_id,))
+        UPDATE {}
+        SET vote_number = vote_number {} 1
+        WHERE id = %s""".format(table, action)
+    cursor.execute(query, (id,))
 
 
 @database_common.connection_handler

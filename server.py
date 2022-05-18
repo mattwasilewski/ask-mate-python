@@ -53,9 +53,9 @@ def search_questions():
 
 @app.route("/add-question", methods=['GET', 'POST'])
 def add_question():
+    userdata = data_manager.get_user_data_by_username(session['username'])
     if request.method == 'POST':
         if 'question-image' in request.files:
-            userdata = data_manager.get_user_data_by_username(session['username'])
             data_manager.save_image_path(request.files['question-image'], request.form.get('message'),
                                          userdata['id'], None, request.form.get('title'))
         question_id = data_manager.get_last_question()['id']
@@ -63,7 +63,8 @@ def add_question():
     elif not session.get('username'):
         flash("You need to be logged in to access this page.", 'warning')
         return redirect(url_for('main_page'))
-    return render_template('add-question.html', username=session.get('username'))
+    return render_template('add-question.html', username=userdata['username'],
+                           user_id=userdata['id'])
 
 
 @app.route("/list")

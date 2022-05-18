@@ -133,7 +133,7 @@ def delete_answer(answer_id):
     #todo jak dostać sie do question id w inny sposob -> jest w templatce html
     question_id = data_manager.get_question_id_by_answer_id(answer_id)['question_id']
     data_manager.delete_comment_by_answer_id(answer_id)
-    data_manager.delete_answer(answer_id)
+    data_manager.delete_data(answer_id, 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 

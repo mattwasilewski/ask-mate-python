@@ -9,8 +9,10 @@ content %} {{ super() }} {% if username %}
     <div id="questions">
         <a href="/question/{{ question.id }}">{{ question.title }}</a>
         <br /><br />
-        {{ question.message }}
-        <br /><br />
+        <div class='text-center'>
+        <p class='question-message'>{{ question.message }}</p>
+        </div>
+        <br />
         {% if username %}
         <form
             class="like-buttons-form"

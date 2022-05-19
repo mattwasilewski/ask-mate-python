@@ -95,6 +95,15 @@ img {
     color: white;
 }
 
+.question-message {
+    width: 20em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin: auto
+}
+
 /*div .question-comments {*/
 /*    margin: 0 auto*/
 /*}*/

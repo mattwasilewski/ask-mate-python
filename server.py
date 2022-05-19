@@ -74,7 +74,8 @@ def route_list():
     sort_method = request.args.get('order_by')
     order = request.args.get('order_direction')
     question = util.get_sorted_questions(sort_method, order)
-    return render_template('list.html', questions=question, username=username, user_id=user_id)
+    return render_template('list.html', questions=question, username=username,
+                           user_id=user_id, order=order, sort_method=sort_method)
 
 
 @app.route("/question/<question_id>")

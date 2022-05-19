@@ -43,7 +43,9 @@
 .add-question-with-select {
     display: inline-block;
     margin-top: 60px;
-    margin-left: 55.5%;
+    margin-right: 1%;
+    position: absolute;
+    right: 0px;
 }
 
 .navbar-expand-lg {
@@ -51,6 +53,7 @@
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 1;
 }
 
 .table-striped,
@@ -65,3 +68,37 @@
     margin-top: 60px;
     margin-left: 0.5%;
 }
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.comment-btn,
+#answer-btn {
+    color: white;
+    text-decoration: none;
+}
+
+#delete-btn,
+#delete-btn1,
+.comment-btn {
+    display: inline-block;
+}
+.question-data {
+    text-align: center;
+}
+.comment-btn:hover {
+    text-decoration: none;
+    color: white;
+}
+
+/*div .question-comments {*/
+/*    margin: 0 auto*/
+/*}*/
+/*button {*/
+/*    margin: 0 auto;*/
+/*    display: block;*/
+/*}*/

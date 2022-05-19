@@ -1,34 +1,42 @@
 {% extends 'base.html' %} {% block content %} {{ super() }}
 <div id="question-page">
-    <h2>
-        {{ question.title }} {% if username == author or username == 'admin' %}
-        <button>
-            <a href="{{ url_for('edit_question', question_id=question_id )}}"
-                >Edit</a
-            >
-        </button>
+    <div class="text-center">
+        <h2 class="question-data">
+            {{ question.title }} {% if username == author or username == 'admin'
+            %}
+        </h2>
+        <a href="{{ url_for('edit_question', question_id=question_id )}}"
+            >Edit</a
+        >
         <form
+            id="delete-btn"
             action="{{ url_for('delete_question', question_id=question_id) }}"
             method="post"
         >
-            <button type="submit">Delete</button>
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
         </form>
         {% endif %} {% if username %}
-        <button>
+        <button class="btn btn-secondary btn-sm">
             <a
+                class="comment-btn"
                 href="{{ url_for('add_comment_to_question', question_id=question_id )}}"
-                >Add comment</a
+                >Comment</a
             >
         </button>
-        {% endif %}
-    </h2>
-    <p>
-        {{ question.view_number }} views {{ question.vote_number }} votes
+    </div>
+    {% endif %}
+    <p class="question-data">
+        <i class="fa-solid fa-eye"></i> {{ question.view_number }}
+        <i class="fa-solid fa-clipboard"></i> {{ question.vote_number }}
         <br /><br />
         {{ question.message }}
         <br />
         {% if question.image != None %}
-        <img src="{{'/' + question.image }}" alt="question_image" />
+        <img
+            src="{{'/' + question.image }}"
+            alt="question_image"
+            class="img-fluid"
+        />
         {% endif %}
         <br /><br />
         <small
@@ -36,14 +44,23 @@
         >
         <br />
     </p>
-
-    <div class="question-comments">
+    {% if username %}
+    <div class="text-center">
+        <button class="btn btn-secondary btn-sm">
+            <a
+                href="{{ url_for('new_answer', question_id=question_id )}} "
+                id="answer-btn"
+                >Answer</a
+            >
+        </button>
+    </div>
+    {% endif %}
+    <h4>Question comments:</h4>
+    <div>
         <table>
             {% for comment in comments %} {% if comment['question_id'] ==
             question_id|int %}
-            <tr>
-                <th><b>Comment to question:</b></th>
-            </tr>
+
             <tr>
                 <td>Message:<br />{{ comment.message }}</td>
             </tr>
@@ -61,62 +78,69 @@
             {% endif %} {% endfor %}
         </table>
     </div>
-
+    <div class="text-center">
+        <h2>Answers:</h2>
+    </div>
     {% for answer in answers %}
-    <div class="answers">
-        <h3>Answers:</h3>
-        {{ answer.message }}
+    <div class="text-center">
+        <div>{{ answer.message }}</div>
+        <div><i class="fa-solid fa-clipboard"></i> {{ answer.vote_number }}</div>
         <br />
         {% if answer.image != None %}
         <img src="{{'/' + answer.image }}" alt="answer-image" />
-        {% endif %}
-        <br />
-        {% if username == answer.author or username == 'admin' %}
-        <button>
-            <a href="{{ url_for('edit_answer', answer_id=answer.id) }}">Edit</a>
-        </button>
-
+        {% endif %} {% if username == answer.author or username == 'admin' %}
+        <a href="{{ url_for('edit_answer', answer_id=answer.id) }}">Edit</a>
         <form
             action="{{ url_for('delete_answer', answer_id=answer.id) }}"
             method="post"
+            id="delete-btn1"
         >
-            <button type="submit">Delete</button>
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
         </form>
         {% endif %} {% if username %}
-        <form
-            action="{{ url_for('answer_vote_up', answer_id=answer.id) }}"
-            method="post"
-        >
-            <button type="submit">Vote up</button>
-        </form>
-        <form
-            action="{{ url_for('answer_vote_down', answer_id=answer.id) }}"
-            method="post"
-        >
-            <button type="submit">Vote down</button>
-        </form>
-        <button>
+        <button class="btn btn-secondary btn-sm">
             <a
+                class="comment-btn"
                 href="{{ url_for('add_comment_to_answer', answer_id=answer.id) }}"
-                >Add comment</a
+                >Comment</a
             >
         </button>
+        <div class="votes">
+            <br />
+            <form
+                class="like-buttons-form"
+                action="{{ url_for('answer_vote_up', answer_id=answer.id) }}"
+                method="post"
+            >
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                </button>
+            </form>
+            <form
+                class="like-buttons-form"
+                action="{{ url_for('answer_vote_down', answer_id=answer.id) }}"
+                method="post"
+            >
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-hand-thumbs-down"></i>
+                </button>
+            </form>
+        </div>
         {% endif %}
     </div>
-    {{ answer.vote_number }} votes
     <br />
-    <small
-        >Posted on: {{ answer.submission_time }} by: {{ answer.author }}</small
-    >
+    <div class="text-center">
+        <small
+            >Posted on: {{ answer.submission_time }} by: {{ answer.author
+            }}</small
+        >
+    </div>
     <br /><br />
-
+    <h5>Answer comments:</h5>
     <div class="answer-comments">
         <table>
             {% for comment in comments %} {% if comment['answer_id'] ==
             answer['id'] %}
-            <tr>
-                <th><b>Comment </b></th>
-            </tr>
             <tr>
                 <td>Message:<br />{{ comment.message }}</td>
             </tr>
@@ -135,9 +159,4 @@
         </table>
     </div>
 </div>
-
-{% endfor %} {% if username %}
-<button>
-    <a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a>
-</button>
-{% endif %} {% endblock %}
+{% endfor %} {% endblock %}

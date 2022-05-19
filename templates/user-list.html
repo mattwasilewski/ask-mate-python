@@ -8,36 +8,36 @@
         <th>Amount of answers:</th>
         <th>Amount of comments:</th>
     </tr>
-    {% for userdata in usersdata %}
+    {% for userdata in usersdata if not userdata["username"]== 'admin' %}
         <tr>
-            <th>
+            <td>
                 <a href="{{ url_for("user_page", user_id=userdata['id'])  }}">
                     {{ userdata["username"] }}</a>
-            </th>
-            <th>
+            </td>
+            <td>
                 {{ userdata["registration_date"] }}
-            </th>
-            <th>
+            </td>
+            <td>
                 {% for user_question in count_questions %}
                     {% if userdata["id"] == user_question["id"] %}
                         {{ user_question["count_question"] }}
                     {% endif %}
                 {% endfor %}
-            </th>
-            <th>
+            </td>
+            <td>
                 {% for user_answer in count_answers %}
                     {% if userdata["id"] == user_answer["id"] %}
                         {{ user_answer["count_answer"] }}
                     {% endif %}
                 {% endfor %}
-            </th>
-            <th>
+            </td>
+            <td>
                 {% for user_comment in count_comments %}
                     {% if userdata["id"] == user_comment["id"] %}
                         {{ user_comment["count_comment"] }}
                     {% endif %}
                 {% endfor %}
-            </th>
+            </td>
         </tr>
     {% endfor %}
 </table>

@@ -314,11 +314,23 @@ def count_data_by_user_id(cursor, data):
 
 
 @database_common.connection_handler
-def get_users_replies(cursor, username, data):
+def get_user_answers(cursor, username):
     query = f"""
-        SELECT users.id AS id, {data}.message AS message, {data}.question_id AS question_id
+        SELECT users.id AS id, answer.message AS message, answer.question_id AS question_id
         FROM users
-        INNER JOIN {data} on {data}.user_id = users.id 
+        INNER JOIN answer on answer.user_id = users.id 
+        WHERE users.username = %s
+    """
+    cursor.execute(query, (username,))
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_user_questions(cursor, username):
+    query = f"""
+        SELECT users.id AS id, q.title AS title, q.id AS question_id
+        FROM users
+        INNER JOIN question q on users.id = q.user_id 
         WHERE users.username = %s
     """
     cursor.execute(query, (username,))

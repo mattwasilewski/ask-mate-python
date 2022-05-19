@@ -3,10 +3,9 @@ content %} {{ super() }} {% if username %}
 <a class="add-question" href="{{ url_for('add_question') }}">Add a question</a>
 {% endif %}
 <div class="question-list">
-{% if not username %}
-    <br><br><br>
-{% endif %}
-    {% for question in questions %}
+    {% if not username %}
+    <br /><br /><br />
+    {% endif %} {% for question in questions %}
     <div id="questions">
         <a href="/question/{{ question.id }}">{{ question.title }}</a>
         <br /><br />

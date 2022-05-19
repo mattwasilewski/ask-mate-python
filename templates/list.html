@@ -3,18 +3,18 @@
 <form id="select-form" method="get">
     <label for="sort">Sorted by:</label>
     <select name="order_by" id="sort">
-        <option value="time">Submission time</option>
-        <option value="title">Title</option>
-        <option value="message">Message</option>
-        <option value="views">Number of views</option>
-        <option value="votes">Number of votes</option>
+        <option value="time" {% if sort_method == 'time' %} selected {% endif %}>Submission time</option>
+        <option value="title" {% if sort_method == 'title' %} selected {% endif %}>Title</option>
+        <option value="message" {% if sort_method == 'message' %} selected {% endif %}>Message</option>
+        <option value="views" {% if sort_method == 'views' %} selected {% endif %}>Number of views</option>
+        <option value="votes" {% if sort_method == 'votes' %} selected {% endif %}>Number of votes</option>
     </select>
     <label for="order">Order:</label>
     <select name="order_direction" id="order">
-        <option value="desc">Descending</option>
-        <option value="asc">Ascending</option>
+        <option value="desc" {% if order == 'desc' %} selected {% endif %}>Descending</option>
+        <option value="asc" {% if order == 'asc' %} selected {% endif %}>Ascending</option>
     </select>
-    <button type="submit">Sort</button>
+    <button type="submit" class="btn btn-secondary btn-sm">Sort</button>
 </form>
 <div class="add-question-with-select">
     <a href="{{ url_for('add_question') }}">Add a question</a>

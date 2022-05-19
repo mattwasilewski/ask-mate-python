@@ -1,20 +1,27 @@
-{% extends 'base.html' %} {% block content %} {{ super() }}
-<div id="comment_page">
-    <form
-        class="submit-data-form"
-        action="{{ edit_answer }}"
-        method="post"
-        enctype="multipart/form-data"
-    >
-        <label for="message"><strong>Edit your answer:</strong></label>
+
+
+
+{% extends 'base.html' %} {% block title %} Edit answer | AskMate {% endblock
+%} {% block content %} {{ super() }}
+    <div class="edit">
+    <br><br><br>
+<form
+    class="submit-data-form"
+    action="{{ edit_answer }}"
+    method="post"
+    enctype="multipart/form-data"
+>
+    <label for="message"><strong>Edit your answer:</strong></label>
         <br />
         <br />
         <textarea id="message" name="message" rows="6" cols="60" required>
 {{ answer.message }}</textarea
         >
-        <br />
-        <input type="submit" value="Submit" />
-    </form>
-</div>
-
+    <br>
+    <button type="submit" class="btn btn-color px-5 mb-5 w-30">Submit</button>
+</form>
+    </div>
 {% endblock %}
+
+
+

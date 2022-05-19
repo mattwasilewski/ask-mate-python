@@ -1,15 +1,25 @@
-{% extends 'base.html' %}
-{% block content %} {{ super() }}
+{% extends 'base.html' %} {% block content %} {{ super() }}
 
-    <div id="comment_page">
-       <form class="submit-data-form" action="{{ add_comment_to_question }}" method="post" enctype="multipart/form-data">
+<div id="comment_page">
+    <form
+        class="submit-data-form"
+        action="{{ add_comment_to_question }}"
+        method="post"
+        enctype="multipart/form-data"
+    >
         <label for="message"><strong>Enter your comment:</strong></label>
-            <br>
-            <br>
-        <textarea id="message" name="message" rows="6" cols="60" required></textarea>
-            <br>
-        <input type="submit" value="Submit">
-        </form>
-    </div>
+        <br />
+        <br />
+        <textarea
+            id="message"
+            name="message"
+            rows="6"
+            cols="60"
+            required
+        ></textarea>
+        <br />
+        <input type="submit" value="Submit" />
+    </form>
+</div>
 
 {% endblock %}

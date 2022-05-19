@@ -9,35 +9,27 @@
     margin-left: 100px;
 }
 
-
 #main {
-        float:left;
-        width:15%;
-      }
-
-#child1 {
-        width:15%;
-        float:left;
-      }
-
-#child2 {
-        width:15%;
-        float:left;
-      }
-
-
-.card{
-
-  width: 400px;
-  border:none;
-
+    float: left;
+    width: 15%;
 }
 
+#child1 {
+    width: 15%;
+    float: left;
+}
 
+#child2 {
+    width: 15%;
+    float: left;
+}
 
+.card {
+    width: 400px;
+    border: none;
+}
 
-
-.like-buttons-form{
+.like-buttons-form {
     display: inline-block;
 }
 
@@ -54,8 +46,6 @@
     margin-left: 55.5%;
 }
 
-
-
 .navbar-expand-lg {
     position: fixed;
     top: 0;
@@ -63,7 +53,10 @@
     width: 100%;
 }
 
-.table-striped, .submit-data-form, #question-page {
+.table-striped,
+.submit-data-form,
+#question-page,
+#searched-questions {
     margin-top: 55px;
 }
 

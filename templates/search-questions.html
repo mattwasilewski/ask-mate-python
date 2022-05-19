@@ -1,25 +1,32 @@
-{% extends 'base.html' %}
-{% block title %} Posts containing '{{ searching_phrase }}' | AskMate {% endblock %}
-{% block content %} {{ super() }}
-    <div>
+{% extends 'base.html' %} {% block title %} Posts containing '{{
+searching_phrase }}' | AskMate {% endblock %} {% block content %} {{ super() }}
+<br />
+<div id="searched-questions">
     {% for question in questions %}
-        <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>
-            <br><br>
-            {{ question.q_message }}
-            <br><br>
-        <form action="{{ url_for('question_vote_up', question_id = question.id) }}" method="post">
+    <div id="questions">
+        <a href="/question/{{ question.id }}">{{ question.title }}</a>
+        <br /><br />
+        {{ question.q_message }}
+        <br /><br />
+        <form
+            action="{{ url_for('question_vote_up', question_id = question.id) }}"
+            method="post"
+        >
             <button type="submit">Vote up</button>
         </form>
-        <form action="{{ url_for('question_vote_down', question_id = question.id)}}" method="post">
+        <form
+            action="{{ url_for('question_vote_down', question_id = question.id)}}"
+            method="post"
+        >
             <button type="submit">Vote down</button>
         </form>
-            <br>
-            <br>
-            {{ question.view_number }} views {{ question.q_vote_number }} votes
-            <br>
-            <small>Posted on: {{ question.q_submission_time }}</small>
-        </div>
-    {% endfor %}
-        <a href="{{ url_for('main_page') }}">Back to main page</a>
+        <br />
+        <br />
+        {{ question.view_number }} views {{ question.q_vote_number }} votes
+        <br />
+        <small>Posted on: {{ question.q_submission_time }}</small>
     </div>
+    {% endfor %}
+    <a href="{{ url_for('main_page') }}">Back to main page</a>
+</div>
 {% endblock %}

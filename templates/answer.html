@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
 {% block content %} {{ super() }}
-
     <div id="new-answer-page">
        <form class="submit-data-form" action="{{ "/question/"+ question_id + "/new-answer"}}" method="post" enctype="multipart/form-data">
-        <label for="message"><strong>Enter your answer:</strong></label><br>
-        <textarea id="message" name="message" rows="6" cols="60" required></textarea>
-            <br>
-       <strong>Add image:</strong>
-       <input type="file" id="question-image" name="question-image">
-        <input type="submit" value="Submit">
+           <label for="message"><strong>Enter your answer:</strong></label><br>
+           <textarea id="message" name="message" rows="6" cols="60" required></textarea>
+           <br>
+           <strong>Add image:</strong>
+           <input type="file" id="question-image" name="question-image">
+           <input type="submit" value="Submit">
         </form>
         <a href="{{ url_for('display_question', question_id=question_id) }}">Go back</a>
     </div>
-
 {% endblock %}

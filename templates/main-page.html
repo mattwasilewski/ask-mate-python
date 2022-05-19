@@ -1,30 +1,42 @@
-{% extends 'base.html' %}
-{% block title %} AskMate {% endblock %}
-{% block content %}
-    {{ super() }}
-    <div class="question-list">
-        {% for question in questions %}
-            <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>
-                <br><br>
-                {{ question.message }}
-                <br><br>
-            {% if username %}
-            <form action="{{ url_for('question_vote_up', question_id = question.id) }}" method="post">
-                <button type="submit">Vote up</button>
-            </form>
-            <form action="{{ url_for('question_vote_down', question_id = question.id)}}" method="post">
-                <button type="submit">Vote down</button>
-            </form>
-            {% endif %}
-                <br>
-                <br>
-                {{ question.view_number }} views {{ question.vote_number }} votes
-                <br>
-                <small>Posted on: {{ question.submission_time }}</small>
-            </div>
-        {% endfor %}
+{% extends 'base.html' %} {% block title %} AskMate {% endblock %} {% block
+content %} {{ super() }} {% if username %}
+<a href="{{ url_for('add_question') }}">Add a question</a>
+{% endif %}
+<div class="question-list">
+    {% for question in questions %}
+    <div id="questions">
+        <a href="/question/{{ question.id }}">{{ question.title }}</a>
+        <br /><br />
+        {{ question.message }}
+        <br /><br />
+        {% if username %}
+        <form
+            class="like-buttons-form"
+            action="{{ url_for('question_vote_up', question_id = question.id) }}"
+            method="post"
+        >
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-hand-thumbs-up"></i>
+            </button>
+        </form>
+
+        <form
+            class="like-buttons-form"
+            action="{{ url_for('question_vote_down', question_id = question.id)}}"
+            method="post"
+        >
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-hand-thumbs-down"></i>
+            </button>
+        </form>
+        {% endif %}
+        <br />
+        <br />
+        <i class="fa-solid fa-eye"></i> {{ question.view_number }}
+        <i class="fa-solid fa-clipboard"></i> {{ question.vote_number }}
+        <br />
+        <small>Posted on: {{ question.submission_time }}</small>
     </div>
-    {% if username %}
-    <button><a href="{{ url_for('add_question') }}">Add a question</a></button>
-    {% endif %}
+    {% endfor %}
+</div>
 {% endblock %}

@@ -130,7 +130,6 @@ def delete_question(question_id):
 
 @app.route("/answer/<answer_id>/delete", methods=['POST'])
 def delete_answer(answer_id):
-    #todo jak dostać sie do question id w inny sposob -> jest w templatce html
     question_id = data_manager.get_data_by_id(answer_id, 'question_id')['question_id']
     data_manager.delete_comment_by_answer_id(answer_id)
     data_manager.delete_data(answer_id, 'answer')

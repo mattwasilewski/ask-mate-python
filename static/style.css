@@ -24,3 +24,8 @@
         width:15%;
         float:left;
       }
+
+.like-buttons-form{
+    display: inline-block;
+}
+

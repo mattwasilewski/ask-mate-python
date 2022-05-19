@@ -104,6 +104,16 @@ img {
     margin: auto
 }
 
+
+.container{
+    margin-left: 450px;
+}
+
+.edit{
+    margin-top: 10px;
+    text-align: center;
+}
+
 /*div .question-comments {*/
 /*    margin: 0 auto*/
 /*}*/

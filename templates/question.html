@@ -54,8 +54,10 @@
             >
         </button>
     </div>
-    {% endif %}
+    {% endif %} {% for comment in comments %} {% if comment['question_id'] ==
+    question_id|int %}
     <h4>Question comments:</h4>
+    {% endif %} {% endfor %}
     <div>
         <table>
             {% for comment in comments %} {% if comment['question_id'] ==
@@ -79,12 +81,16 @@
         </table>
     </div>
     <div class="text-center">
+        {% if answers %}
         <h2>Answers:</h2>
+        {% endif %}
     </div>
     {% for answer in answers %}
     <div class="text-center">
         <div>{{ answer.message }}</div>
-        <div><i class="fa-solid fa-clipboard"></i> {{ answer.vote_number }}</div>
+        <div>
+            <i class="fa-solid fa-clipboard"></i> {{ answer.vote_number }}
+        </div>
         <br />
         {% if answer.image != None %}
         <img src="{{'/' + answer.image }}" alt="answer-image" />
@@ -136,7 +142,9 @@
         >
     </div>
     <br /><br />
+    {% for comment in comments %} {% if comment['answer_id'] == answer['id'] %}
     <h5>Answer comments:</h5>
+    {% endif %} {% endfor %}
     <div class="answer-comments">
         <table>
             {% for comment in comments %} {% if comment['answer_id'] ==

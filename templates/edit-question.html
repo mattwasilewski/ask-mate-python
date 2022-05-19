@@ -2,7 +2,7 @@
 {% block title %} Edit question | AskMate {% endblock %}
 {% block content %}
     {{ super() }}
-    <form action="{{ add_comment_to_answer }}" method="post" enctype="multipart/form-data">
+    <form class="submit-data-form" action="{{ add_comment_to_answer }}" method="post" enctype="multipart/form-data">
         <label for="title">Edit title:</label>
         <br>
         <input type="text" name="title" id="title" value="{{ question.title }}" size="115" minlength="10">

@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block title %} Questions | AskMate {% endblock %}
 {% block content %} {{ super() }}
-<form method="get">
+<form id="select-form" method="get">
     <label for="sort">Sorted by:</label>
     <select name="order_by" id="sort">
         <option value="time">Submission time</option>
@@ -16,6 +16,9 @@
     </select>
     <button type="submit">Sort</button>
 </form>
+<div class="add-question-with-select" >
+    <a href="{{ url_for('add_question') }}">Add a question</a>
+</div>
 <div class="question-list">
     {% for question in questions %}
     <div id="questions">
@@ -53,6 +56,5 @@
         <small>Posted on: {{ question.submission_time }}</small>
     </div>
     {% endfor %}
-    <button><a href="{{ url_for('add_question') }}">Add a question</a></button>
 </div>
 {% endblock %}

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block title %} User Panel | AskMate {% endblock %}
 {% block content %} {{ super() }}
-<table style="border:1px solid black;margin-left:auto;margin-right:auto;text-align:center">
+<table class="table table-striped">
     <tr>
         <th>User login:</th>
-        <th>Date of register:</th>
+        <th>Register date:</th>
         <th>Amount of questions:</th>
         <th>Amount of answers:</th>
         <th>Amount of comments:</th>
@@ -18,14 +18,14 @@
             <td>
                 {{ userdata["registration_date"] }}
             </td>
-            <td>
+            <td class="align-top" >
                 {% for user_question in count_questions %}
                     {% if userdata["id"] == user_question["id"] %}
                         {{ user_question["count_question"] }}
                     {% endif %}
                 {% endfor %}
             </td>
-            <td>
+            <td class="align-top">
                 {% for user_answer in count_answers %}
                     {% if userdata["id"] == user_answer["id"] %}
                         {{ user_answer["count_answer"] }}

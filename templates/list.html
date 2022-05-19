@@ -1,48 +1,60 @@
-{% extends 'base.html' %}
-{% block title %} Questions | AskMate {% endblock %}
-{% block content %}
-    {{ super() }}
-    <form method="get">
-        <label for="sort">Sorted by:</label>
-        <select name="order_by" id="sort">
-            <option value="time">Submission time</option>
-            <option value="title">Title</option>
-            <option value="message">Message</option>
-            <option value="views">Number of views</option>
-            <option value="votes">Number of votes</option>
-        </select>
-        <label for="order">Order:</label>
-        <select name="order_direction" id="order">
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-        </select>
-        <button type="submit">Sort</button>
-    </form>
-    <div class = question-list>
-        {% for question in questions %}
-            <div id="questions"><a href="/question/{{ question.id }}">{{ question.title }}</a>
-                <br><br>
-                {{ question.message }}
-                <br><br>
-            {% if username %}
-            <form action="{{ url_for('question_vote_up', question_id = question.id) }}" method="post">
-                <button type="submit">Vote up</button>
+{% extends 'base.html' %} {% block title %} Questions | AskMate {% endblock %}
+{% block content %} {{ super() }}
+<form id="select-form" method="get">
+    <label for="sort">Sorted by:</label>
+    <select name="order_by" id="sort">
+        <option value="time">Submission time</option>
+        <option value="title">Title</option>
+        <option value="message">Message</option>
+        <option value="views">Number of views</option>
+        <option value="votes">Number of votes</option>
+    </select>
+    <label for="order">Order:</label>
+    <select name="order_direction" id="order">
+        <option value="desc">Descending</option>
+        <option value="asc">Ascending</option>
+    </select>
+    <button type="submit">Sort</button>
+</form>
+<div class="add-question-with-select" >
+    <a href="{{ url_for('add_question') }}">Add a question</a>
+</div>
+<div class="question-list">
+    {% for question in questions %}
+    <div id="questions">
+        <a href="/question/{{ question.id }}">{{ question.title }}</a>
+        <br /><br />
+        {{ question.message }}
+        <br /><br />
+        {% if username %}
+        <div class="like-buttons">
+            <form
+                class="like-buttons-form"
+                action="{{ url_for('question_vote_up', question_id = question.id) }}"
+                method="post"
+            >
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                </button>
             </form>
-            <form action="{{ url_for('question_vote_down', question_id = question.id)}}" method="post">
-                <button type="submit">Vote down</button>
+            <form
+                class="like-buttons-form"
+                action="{{ url_for('question_vote_down', question_id = question.id)}}"
+                method="post"
+            >
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-hand-thumbs-down"></i>
+                </button>
             </form>
-            {% endif %}
-                <br>
-                <br>
-                {{ question.view_number }} views {{ question.vote_number }} votes
-                <br>
-                <small>Posted on: {{ question.submission_time }}</small>
-            </div>
-        {% endfor %}
-    <button><a href="{{ url_for('add_question') }}">Add a question</a></button>
+        </div>
+        {% endif %}
+        <br />
+        <br />
+        <i class="fa-solid fa-eye"></i> {{ question.view_number }}
+        <i class="fa-solid fa-clipboard"></i> {{ question.vote_number }}
+        <br />
+        <small>Posted on: {{ question.submission_time }}</small>
     </div>
-
-    <div>
-        <a href="{{ url_for('main_page') }}">Back to main page</a>
-    </div>
+    {% endfor %}
+</div>
 {% endblock %}

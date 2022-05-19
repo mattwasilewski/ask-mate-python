@@ -35,3 +35,40 @@
 
 
 
+
+
+.like-buttons-form{
+    display: inline-block;
+}
+
+#select-form {
+    display: inline-block;
+    right: 0;
+    margin-top: 60px;
+    margin-left: 5px;
+}
+
+.add-question-with-select {
+    display: inline-block;
+    margin-top: 60px;
+    margin-left: 55.5%;
+}
+
+
+
+.navbar-expand-lg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.table-striped, .submit-data-form, #question-page {
+    margin-top: 55px;
+}
+
+.add-question {
+    display: inline-block;
+    margin-top: 60px;
+    margin-left: 0.5%;
+}

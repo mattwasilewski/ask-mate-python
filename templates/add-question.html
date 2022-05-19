@@ -2,7 +2,7 @@
 {% block title %} Add question | AskMate {% endblock %}
 {% block content %}
     {{ super() }}
-    <form action="{{ url_for('add_question') }}" method="post" enctype="multipart/form-data">
+    <form class="submit-data-form" action="{{ url_for('add_question') }}" method="post" enctype="multipart/form-data">
         <label for="title">Title:</label>
         <br>
         <input type="text" name="title" id="title" size="115" minlength="10" required>
@@ -16,5 +16,5 @@
         <input type="file" id="question-image" name="question-image">
         <button type="submit">Add</button>
     </form>
-    <button><a href="{{ url_for('route_list') }}">Go back</a></button>
+    <a href="{{ url_for('route_list') }}">Go back</a>
 {% endblock %}

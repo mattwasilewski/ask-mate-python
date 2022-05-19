@@ -8,7 +8,7 @@
         <th>Amount of answers:</th>
         <th>Amount of comments:</th>
     </tr>
-    {% for userdata in usersdata %}
+    {% for userdata in usersdata if not userdata["username"]== 'admin' %}
         <tr>
             <td>
                 <a href="{{ url_for("user_page", user_id=userdata['id'])  }}">

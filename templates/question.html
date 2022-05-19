@@ -1,9 +1,7 @@
-{% extends 'base.html' %} {% block content %}
-    {{ super() }}
+{% extends 'base.html' %} {% block content %} {{ super() }}
 <div id="question-page">
     <h2>
-        {{ question.title }}
-        {% if username %}
+        {{ question.title }} {% if username == author or username == 'admin' %}
         <button>
             <a href="{{ url_for('edit_question', question_id=question_id )}}"
                 >Edit</a
@@ -15,6 +13,7 @@
         >
             <button type="submit">Delete</button>
         </form>
+        {% endif %} {% if username %}
         <button>
             <a
                 href="{{ url_for('add_comment_to_question', question_id=question_id )}}"
@@ -32,7 +31,9 @@
         <img src="{{'/' + question.image }}" alt="question_image" />
         {% endif %}
         <br /><br />
-        <small>Posted on: {{ question.submission_time }} by: {{ author }}</small>
+        <small
+            >Posted on: {{ question.submission_time }} by: {{ author }}</small
+        >
         <br />
     </p>
 
@@ -47,10 +48,12 @@
                 <td>Message:<br />{{ comment.message }}</td>
             </tr>
             <tr>
-                <td><small>Posted on: {{ comment.submission_time }} by: {{ comment.author }}</small></td>
-            </tr>
-            <tr>
-                <td>Edited times:<br />{{ comment.edited_count }}</td>
+                <td>
+                    <small
+                        >Posted on: {{ comment.submission_time }} by: {{
+                        comment.author }}</small
+                    >
+                </td>
             </tr>
             <tr>
                 <td>------------------------------------------</td>
@@ -68,7 +71,7 @@
         <img src="{{'/' + answer.image }}" alt="answer-image" />
         {% endif %}
         <br />
-        {% if username %}
+        {% if username == answer.author or username == 'admin' %}
         <button>
             <a href="{{ url_for('edit_answer', answer_id=answer.id) }}">Edit</a>
         </button>
@@ -79,7 +82,7 @@
         >
             <button type="submit">Delete</button>
         </form>
-
+        {% endif %} {% if username %}
         <form
             action="{{ url_for('answer_vote_up', answer_id=answer.id) }}"
             method="post"
@@ -102,7 +105,9 @@
     </div>
     {{ answer.vote_number }} votes
     <br />
-    <small>Posted on: {{ answer.submission_time }} by: {{ answer.author }}</small>
+    <small
+        >Posted on: {{ answer.submission_time }} by: {{ answer.author }}</small
+    >
     <br /><br />
 
     <div class="answer-comments">
@@ -116,10 +121,12 @@
                 <td>Message:<br />{{ comment.message }}</td>
             </tr>
             <tr>
-                <td><small>Posted on: {{ comment.submission_time }} by: {{ comment.author }}</small></td>
-            </tr>
-            <tr>
-                <td>Edited times:<br />{{ comment.edited_count }}</td>
+                <td>
+                    <small
+                        >Posted on: {{ comment.submission_time }} by: {{
+                        comment.author }}</small
+                    >
+                </td>
             </tr>
             <tr>
                 <td>------------------------------------------</td>
@@ -127,15 +134,10 @@
             {% endif %} {% endfor %}
         </table>
     </div>
-
-    {#todo w przypadku edycji dodac edited on + posted on#}
 </div>
 
 {% endfor %} {% if username %}
 <button>
     <a href="{{ url_for('new_answer', question_id=question_id )}}">Answer</a>
 </button>
-{% endif %}
-<button><a href="{{ url_for('route_list') }}">Go back</a></button>
-
-{% endblock %}
+{% endif %} {% endblock %}

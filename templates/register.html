@@ -5,18 +5,27 @@
 {{ error }}
 {% endif %}
 
-<div id="register-page" class="button">
-       <form action="{{ url_for('register') }}" method="post" enctype="multipart/form-data">
-        <label for="username"><strong>Username:</strong></label>
-            <br>
-            <br>
-        <input type="text" name="username" id="username" size="20" required>
-            <br>
-        <label for="password"><strong>Password:</strong></label><br>
-           <input type="password" name="password" id="password" size="50" required><br><br>
-        <input type="submit" value="Submit">
-        </form>
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <div class="card my-5">
+<form action="{{ url_for('register') }}" method="post">
+
+              <div class="text-center"><h3>Registration</h3><br></div>
+            <div class="mb-3">
+              <input type="text" class="form-control" id="username" name="username"
+                placeholder="User Name">
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            </div>
+            <div class="text-center"><button type="submit" class="btn btn-color px-5 mb-5 w-100">Sign In</button></div>
+   </form>
+        </div>
+
+      </div>
     </div>
+  </div>
 
 
 

@@ -54,7 +54,7 @@
             >
         </button>
     </div>
-    {% endif %}
+{% endif %}
     <h4>Question comments:</h4>
     <div>
         <table>
@@ -79,12 +79,16 @@
         </table>
     </div>
     <div class="text-center">
+        {% if answers %}
         <h2>Answers:</h2>
+        {% endif %}
     </div>
     {% for answer in answers %}
     <div class="text-center">
         <div>{{ answer.message }}</div>
-        <div><i class="fa-solid fa-clipboard"></i> {{ answer.vote_number }}</div>
+        <div>
+            <i class="fa-solid fa-clipboard"></i> {{ answer.vote_number }}
+        </div>
         <br />
         {% if answer.image != None %}
         <img src="{{'/' + answer.image }}" alt="answer-image" />

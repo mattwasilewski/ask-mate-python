@@ -24,7 +24,7 @@
     <div id="questions">
         <a href="/question/{{ question.id }}">{{ question.title }}</a>
         <br /><br />
-        {{ question.message }}
+         <p class='question-message'>{{ question.message }}</p>
         <br /><br />
         {% if username %}
         <div class="like-buttons">

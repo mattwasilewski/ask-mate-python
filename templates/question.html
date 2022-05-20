@@ -54,10 +54,8 @@
             >
         </button>
     </div>
-    {% endif %} {% for comment in comments %} {% if comment['question_id'] ==
-    question_id|int %}
+{% endif %}
     <h4>Question comments:</h4>
-    {% endif %} {% endfor %}
     <div>
         <table>
             {% for comment in comments %} {% if comment['question_id'] ==
@@ -142,9 +140,7 @@
         >
     </div>
     <br /><br />
-    {% for comment in comments %} {% if comment['answer_id'] == answer['id'] %}
     <h5>Answer comments:</h5>
-    {% endif %} {% endfor %}
     <div class="answer-comments">
         <table>
             {% for comment in comments %} {% if comment['answer_id'] ==
